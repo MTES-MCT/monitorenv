@@ -5,7 +5,6 @@ from typing import Any, Hashable, List, Union
 
 import numpy as np
 import pandas as pd
-import pytz
 import simplejson
 import sqlalchemy
 from sqlalchemy import select
@@ -341,7 +340,7 @@ def json_converter(x):
         return None
     if isinstance(x, datetime.datetime):
         if x.tzinfo:
-            x = x.replace(tzinfo=pytz.timezone("UTC")) - x.utcoffset()
+            x = x.astimezone(datetime.timezone.utc)
             return x.isoformat().replace("+00:00", "Z")  # UTC, ISO format
         else:
             return x.isoformat() + "Z"
