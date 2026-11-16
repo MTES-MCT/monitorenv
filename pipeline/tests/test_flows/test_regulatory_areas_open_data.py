@@ -225,10 +225,6 @@ def regulatory_areas_for_geoplateforme_csv() -> pd.DataFrame:
             "resume": ["resume1", "resume3"],
             "poly_name": ["poly_name1 qui est différent du CACEM", "poly_name2 qui est différent du CACEM"],
             "plan": ["plan1", "plan2"],
-            "geometry": [
-                make_square_multipolygon(0, 0, 10, 10),
-                make_square_multipolygon(120, -20, 15, 10),
-            ],
             "authorization_periods": [
                 "période d'autorisation1",
                 "période d'autorisation3",
@@ -241,9 +237,9 @@ def regulatory_areas_for_geoplateforme_csv() -> pd.DataFrame:
                 [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
                 None,
             ],
-            "location": ["location1", "location2"],
             "themes": [{'Pêche à pied': [], 'AMP sans réglementation particulière': []}, {'Pêche à pied': [], 'Arrêté à visa environnemental': []}],
             "tags": [{'tag1': ['sub-tag1']}, {'tag2': []}],
+            "location": ["location1", "location2"],
         }
     )
 
@@ -419,23 +415,23 @@ def test_flow(
     assert delivered_file_name == "regulatory_areas_cacem.csv"
     assert isinstance(delivered_file_object, BytesIO)
 
-    df_from_csv_file_object = pd.read_csv(
+    gdf_from_csv_file_object = pd.read_csv(
         delivered_file_object, parse_dates=["creation", "date", "date_fin", "edition"]
     )
 
     # get_regulatory_areas_for_csv doesn't JSON-serialize additional_ref_reg (jsonb), so pandas
     # writes it to CSV using Python's repr (single quotes); NaN means None
-    df_from_csv_file_object["additional_ref_reg"] = df_from_csv_file_object["additional_ref_reg"].apply(
+    gdf_from_csv_file_object["additional_ref_reg"] = gdf_from_csv_file_object["additional_ref_reg"].apply(
         lambda x: ast.literal_eval(x) if isinstance(x, str) else None
     )
-    df_from_csv_file_object["themes"] = df_from_csv_file_object["themes"].apply(
+    gdf_from_csv_file_object["themes"] = gdf_from_csv_file_object["themes"].apply(
         lambda x: ast.literal_eval(x) if isinstance(x, str) else None
     )
-    df_from_csv_file_object["tags"] = df_from_csv_file_object["tags"].apply(
+    gdf_from_csv_file_object["tags"] = gdf_from_csv_file_object["tags"].apply(
         lambda x: ast.literal_eval(x) if isinstance(x, str) else None
     )
     pd.testing.assert_frame_equal(
-        df_from_csv_file_object.convert_dtypes(),
+        gdf_from_csv_file_object.convert_dtypes(),
         regulatory_areas_for_geoplateforme_csv.convert_dtypes(),
     )
 
