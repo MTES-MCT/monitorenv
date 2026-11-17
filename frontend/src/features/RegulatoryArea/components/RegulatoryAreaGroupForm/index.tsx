@@ -19,6 +19,7 @@ import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/Regula
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
+import { usePropagation, type RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Checkbox, FormikTextInput, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
@@ -47,30 +48,26 @@ const mapChildrensComponents = [
   <MapExtentController key="MapExtentController" />
 ]
 
-const DATA_FROM_GROUP = [
-  {
-    label: 'Tracé (dont façade)',
-    value: 'geom-from-group'
-  },
+const DATA_FROM_GROUP: { label: string; value: RegulatoryAreaGroupFields }[] = [
   {
     label: 'Thématiques et sous-thématiques',
-    value: 'themes-from-group'
+    value: 'THEMES'
   },
   {
     label: 'Tags et sous-tags',
-    value: 'tags-from-group'
+    value: 'TAGS'
   },
   {
     label: 'Résumé',
-    value: 'resume-from-group'
+    value: 'RESUME'
   },
   {
     label: "Période d'autorisation",
-    value: 'periode-autorisation-from-group'
+    value: 'AUTHORIZATION_PERIODS'
   },
   {
     label: "Période d'interdiction",
-    value: 'periode-interdiction-from-group'
+    value: 'PROHIBITION_PERIODS'
   }
 ]
 
@@ -87,6 +84,9 @@ export function RegulatoryAreaGroupForm() {
     groupId && !Number.isNaN(+groupId) ? +groupId : skipToken
   )
   const { data: layerNames } = useGetLayerNamesQuery()
+
+  const regulatoryAreaIds = regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? []
+  const { propagation, toggle } = usePropagation(/* regulatoryAreaIds */)
 
   const layerNameOptions = useMemo(() => {
     const formattedLayerNames = (layerNames ?? [])
@@ -106,7 +106,6 @@ export function RegulatoryAreaGroupForm() {
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
-  const [selectedValuesToCopy, setSelectedValuesToCopy] = useState<string[]>([])
 
   const initialValues: RegulatoryArea.RegulatoryAreaGroupToApi = {
     additionalRefReg: regulatoryAreaGroup?.group.additionalRefReg,
@@ -118,7 +117,8 @@ export function RegulatoryAreaGroupForm() {
     location: regulatoryAreaGroup?.group.location,
     prohibitionPeriods: regulatoryAreaGroup?.group.prohibitionPeriods,
     refReg: regulatoryAreaGroup?.group.refReg,
-    regulatoryAreaIds: regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? [],
+    regulatoryAreaIds,
+    resume: regulatoryAreaGroup?.group.resume,
     tags: regulatoryAreaGroup?.group.tags,
     themes: regulatoryAreaGroup?.group.themes,
     type: regulatoryAreaGroup?.group.type,
@@ -179,10 +179,6 @@ export function RegulatoryAreaGroupForm() {
     }
   }
 
-  const selectValuesToCopy = (value: string) => {
-    setSelectedValuesToCopy(prev => (prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]))
-  }
-
   useEffect(() => {
     if (!regulatoryAreaGroup?.regulatoryAreas) {
       return
@@ -191,6 +187,14 @@ export function RegulatoryAreaGroupForm() {
     const extent = getExtentOfLayersGroup(regulatoryAreaGroup.regulatoryAreas)
     dispatch(setFitToExtent(extent))
   }, [dispatch, regulatoryAreaGroup?.regulatoryAreas])
+
+  const withIdentification = useMemo(
+    () =>
+      Object.values(propagation)
+        .map(p => p?.enabled)
+        .some(Boolean),
+    [propagation]
+  )
 
   return (
     <StyledBackofficeWrapper>
@@ -280,15 +284,15 @@ export function RegulatoryAreaGroupForm() {
                     {DATA_FROM_GROUP.map(item => (
                       <Checkbox
                         key={item.value}
-                        checked={selectedValuesToCopy.includes(item.value)}
+                        checked={propagation[item.value]?.enabled}
                         label={item.label}
                         name={item.value}
-                        onChange={() => selectValuesToCopy(item.value)}
+                        onChange={() => toggle(item.value, !propagation[item.value]?.enabled)}
                       />
                     ))}
                   </CommonPropertiesWrapper>
                 </section>
-                <GroupIdentification />
+                {withIdentification && <GroupIdentification isNew={isNew} propagation={propagation} />}
 
                 <RegulatoryTexts isNew={isNew} />
               </FormContent>

@@ -95,6 +95,7 @@ export namespace RegulatoryArea {
     prohibitionPeriods?: string
     refReg?: string
     regulatoryAreaIds?: number[]
+    resume?: string
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
     type?: string
