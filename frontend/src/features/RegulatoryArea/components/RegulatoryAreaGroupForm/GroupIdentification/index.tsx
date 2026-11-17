@@ -3,7 +3,8 @@ import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Bold } from '@components/style'
 import { InformativeMessageForCopyData } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/InformativeMessageForCopyData'
 import { SubTitle } from '@features/RegulatoryArea/style'
-import { SingleTag } from '@mtes-mct/monitor-ui'
+import { usePropagation, type Propagation } from '@features/RegulatoryArea/useCases/usePropagation'
+import { FormikTextarea, Icon, Label, SingleTag, THEME } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { parseOptionsToTags } from '@utils/getTagsAsOptions'
@@ -17,8 +18,15 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-export function GroupIdentification() {
+type GroupIdentificationProps = {
+  isNew: boolean
+  propagation: Propagation
+}
+
+export function GroupIdentification({ isNew, propagation }: GroupIdentificationProps) {
   const { initialValues, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaGroupToApi>()
+
+  const { setOverwrite } = usePropagation()
 
   const allThemesAndSubthemes = useMemo(
     () => values?.themes?.flatMap(theme => [...theme.subThemes, theme]),
@@ -34,108 +42,231 @@ export function GroupIdentification() {
     setFieldValue('tags', parseOptionsToTags(nextTags))
   }
 
+  const withThemesAndTags = useMemo(
+    () => propagation.THEMES?.enabled && propagation.TAGS?.enabled,
+    [propagation.THEMES?.enabled, propagation.TAGS?.enabled]
+  )
+  const withPeriods = useMemo(
+    () => propagation.AUTHORIZATION_PERIODS?.enabled || propagation.PROHIBITION_PERIODS?.enabled,
+    [propagation.AUTHORIZATION_PERIODS?.enabled, propagation.PROHIBITION_PERIODS?.enabled]
+  )
+
   return (
     <>
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
-      {!isEqual(values.themes, initialValues.themes) && (
-        <InformativeMessageForCopyData>
-          <>
-            <MessageTitle>Thématiques par défaut</MessageTitle>
-            <p>
-              Les <Bold>thématiques sélectionnés</Bold> doivent-elles modifier les{' '}
-              <Bold>thématiques actuellement associées aux réglementations&nbsp;? </Bold>Le cas échéant, elles
-              n’impacteront que que les futures zones réglementaires ajoutées au groupe.
-            </p>
-            <UnderlineText>Voir les thématiques ajoutées aux zones réglementaires actuelles</UnderlineText>
-          </>
-        </InformativeMessageForCopyData>
-      )}
-      <Fields>
-        <RegulatoryThemesFilter
-          isErrorMessageHidden
-          isLabelHidden={false}
-          isRequired
-          isTransparent={false}
-          label="Thématiques et sous-thématiques"
-          onChange={setThemes}
-          value={values?.themes ?? []}
-        />
-        <SmallInlineFields>
-          {allThemesAndSubthemes?.map(theme => (
-            <SingleTag
-              key={theme.id}
-              onDelete={() => {
-                const updatedTags = deleteThemeTag(values?.themes ?? [], theme)
-                setFieldValue('themes', updatedTags)
-              }}
-            >
-              {theme.name}
-            </SingleTag>
-          ))}
-        </SmallInlineFields>
-        {!isEqual(values.tags, initialValues.tags) && (
-          <InformativeMessageForCopyData>
+      {!isNew && !isEqual(values.themes, initialValues.themes) && (
+        <InformativeMessageForCopyData
+          onConfirm={() => setOverwrite('THEMES', true)}
+          onReject={() => setOverwrite('THEMES', false)}
+          text={
             <>
-              <MessageTitle>Tags par défaut</MessageTitle>
-              <p>
-                Les <Bold>tags sélectionnés</Bold> doivent-elles modifier les{' '}
-                <Bold>tags actuellement associés aux réglementations&nbsp;? </Bold>Le cas échéant, ils n’impacteront que
-                que les futures zones réglementaires ajoutées au groupe.
-              </p>
-              <UnderlineText>Voir les tags ajoutés aux zones réglementaires actuelles</UnderlineText>
+              Les <Bold>thématiques sélectionnés</Bold> doivent-elles modifier les{' '}
+              <Bold>thématiques actuellement associées aux réglementations&nbsp;? </Bold>
             </>
-          </InformativeMessageForCopyData>
-        )}
-        <RegulatoryTagsFilter
-          isErrorMessageHidden
-          isLabelHidden={false}
-          isTransparent={false}
-          label="Tags et sous-tags"
-          onChange={setTags}
-          value={values?.tags ?? []}
+          }
+          title="Thématiques"
         />
-        <SmallInlineFields>
-          {allTagsAndSubtags?.map(tag => (
-            <SingleTag
-              key={tag.id}
-              onDelete={() => {
-                const updatedTags = deleteTagTag(values?.tags ?? [], tag)
-                setFieldValue('tags', updatedTags)
-              }}
-            >
-              {tag.name}
-            </SingleTag>
-          ))}
-        </SmallInlineFields>
-      </Fields>
+      )}
+      {!isNew && !isEqual(values.tags, initialValues.tags) && (
+        <InformativeMessageForCopyData
+          onConfirm={() => setOverwrite('TAGS', true)}
+          onReject={() => setOverwrite('TAGS', false)}
+          text={
+            <>
+              Les <Bold>tags sélectionnés</Bold> doivent-elles modifier les{' '}
+              <Bold>tags actuellement associés aux réglementations&nbsp;? </Bold>
+            </>
+          }
+          title="Tags"
+        />
+      )}
+      {(propagation.THEMES?.enabled || propagation.TAGS?.enabled) && (
+        <Fields $withTwoColumns={withThemesAndTags}>
+          {propagation.THEMES?.enabled && (
+            <ThemeOrTagContainer $withTwoColumns={withThemesAndTags}>
+              <RegulatoryThemesFilter
+                isErrorMessageHidden
+                isLabelHidden={false}
+                isRequired
+                isTransparent={false}
+                label="Thématiques et sous-thématiques"
+                onChange={setThemes}
+                value={values?.themes ?? []}
+              />
+              {allThemesAndSubthemes && (
+                <SmallInlineFields>
+                  {allThemesAndSubthemes?.map(theme => (
+                    <SingleTag
+                      key={theme.id}
+                      onDelete={() => {
+                        const updatedTags = deleteThemeTag(values?.themes ?? [], theme)
+                        setFieldValue('themes', updatedTags)
+                      }}
+                    >
+                      {theme.name}
+                    </SingleTag>
+                  ))}
+                </SmallInlineFields>
+              )}
+            </ThemeOrTagContainer>
+          )}
+          {propagation.TAGS?.enabled && (
+            <ThemeOrTagContainer $withTwoColumns={withThemesAndTags}>
+              <RegulatoryTagsFilter
+                isErrorMessageHidden
+                isLabelHidden={false}
+                isTransparent={false}
+                label="Tags et sous-tags"
+                onChange={setTags}
+                value={values?.tags ?? []}
+              />
+              {allTagsAndSubtags && (
+                <SmallInlineFields>
+                  {allTagsAndSubtags?.map(tag => (
+                    <SingleTag
+                      key={tag.id}
+                      onDelete={() => {
+                        const updatedTags = deleteTagTag(values?.tags ?? [], tag)
+                        setFieldValue('tags', updatedTags)
+                      }}
+                    >
+                      {tag.name}
+                    </SingleTag>
+                  ))}
+                </SmallInlineFields>
+              )}
+            </ThemeOrTagContainer>
+          )}
+        </Fields>
+      )}
+      {propagation.RESUME?.enabled && (
+        <>
+          {!isNew && !isEqual(values.resume, initialValues.resume) && (
+            <InformativeMessageForCopyData
+              onConfirm={() => setOverwrite('RESUME', true)}
+              onReject={() => setOverwrite('RESUME', false)}
+              text={
+                <>
+                  Le <Bold>thème sélectionné</Bold> doit-il modifier le{' '}
+                  <Bold>résumé actuellement associé aux réglementations&nbsp;? </Bold>
+                </>
+              }
+              title="Résumé"
+            />
+          )}
+          <div>
+            <FormikTextarea isErrorMessageHidden label="Résumé" name="resume" rows={4} />
+            <InformationMessage>
+              Le résumé concerne tout ce qui n’est pas une période. Si la réglementation ne concerne que des périodes,
+              alors le résumé n’est pas nécessaire.
+            </InformationMessage>
+          </div>
+        </>
+      )}
+      {withPeriods && (
+        <>
+          {!isNew && !isEqual(values.authorizationPeriods, initialValues.authorizationPeriods) && (
+            <InformativeMessageForCopyData
+              onConfirm={() => setOverwrite('AUTHORIZATION_PERIODS', true)}
+              onReject={() => setOverwrite('AUTHORIZATION_PERIODS', false)}
+              text={
+                <>
+                  La <Bold>période d&apos;autorisation ajoutée</Bold> doit-elle modifier les{' '}
+                  <Bold>périodes d&apos;autorisation actuellement associées aux réglementations&nbsp;? </Bold>
+                </>
+              }
+              title="Période d'autorisation"
+            />
+          )}
+          {!isNew && !isEqual(values.prohibitionPeriods, initialValues.prohibitionPeriods) && (
+            <InformativeMessageForCopyData
+              onConfirm={() => setOverwrite('PROHIBITION_PERIODS', true)}
+              onReject={() => setOverwrite('PROHIBITION_PERIODS', false)}
+              text={
+                <>
+                  La <Bold>période d&apos;interdiction ajoutée</Bold> doit-elle modifier les{' '}
+                  <Bold>périodes d&apos;interdiction actuellement associées aux réglementations&nbsp;? </Bold>
+                </>
+              }
+              title="Période d'interdiction"
+            />
+          )}
+          <PeriodContainer>
+            <Period>
+              <Label>
+                <StyledIcon color={THEME.color.mediumSeaGreen} size={10} />
+                Période d&apos;autorisation
+              </Label>
+              <FormikTextarea
+                isErrorMessageHidden
+                isLabelHidden
+                isRequired
+                label="Période d'autorisation"
+                name="authorizationPeriods"
+                placeholder="Détail de la période d’autorisation"
+              />
+            </Period>
+            <Period>
+              <Label>
+                <StyledIcon color={THEME.color.maximumRed} size={10} />
+                Période d&apos;interdiction
+              </Label>
+              <FormikTextarea
+                isErrorMessageHidden
+                isLabelHidden
+                isRequired
+                label="Période d'interdiction"
+                name="prohibitionPeriods"
+                placeholder="Détail de la période d’interdiction"
+              />
+            </Period>
+          </PeriodContainer>
+        </>
+      )}
     </>
   )
 }
 
-const Fields = styled.div`
+const Fields = styled.div<{ $withTwoColumns?: boolean }>`
   display: flex;
-  flex-direction: column;
   gap: 8px;
   flex: 1;
-  min-width: 0;
+  flex-direction: ${props => (props.$withTwoColumns ? 'row' : 'column')};
 `
 
-const InlineFields = styled(Fields)`
-  flex-direction: row;
-  justify-content: space-between;
+const ThemeOrTagContainer = styled.div<{ $withTwoColumns?: boolean }>`
+  display: flex;
+  flex-basis: ${props => (props.$withTwoColumns ? '50%' : '100%')};
+  flex-direction: column;
+  gap: 8px;
+  max-width: ${props => (props.$withTwoColumns ? '50%' : '100%')};
 `
-const SmallInlineFields = styled(InlineFields)`
+
+const SmallInlineFields = styled.div`
+  display: flex;
+  justify-content: space-between;
   gap: 4px;
   flex-wrap: wrap;
-  flex: 0;
   justify-content: start;
 `
-const MessageTitle = styled.p`
-  color: #45688a;
-  font-weight: bold;
-  margin-bottom: 8px;
+
+const InformationMessage = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
+  font-style: italic;
 `
 
-const UnderlineText = styled.p`
-  text-decoration: underline;
+const PeriodContainer = styled.div`
+  display: flex;
+  gap: 16px;
+`
+
+const Period = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+`
+
+const StyledIcon = styled(Icon.CircleFilled)`
+  margin-right: 8px;
 `
