@@ -22,13 +22,10 @@ const Layer = styled.li<{
   border-bottom: ${p => (p.$withBorderBottom ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
   border-left: ${p => {
     if (p.$isNew) {
-      return `4px solid ${p.theme.color.blueGray}`
+      return `4px solid ${p.$isBackoffice ? p.theme.color.arylideYellow : p.theme.color.blueGray}`
     }
-    if (!p.$isBackoffice && p.$isRecentlyUpdated) {
-      return `4px solid ${getColorWithAlpha(p.theme.color.blueGray, 0.4)}`
-    }
-    if (p.$isBackoffice && p.$isRecentlyUpdated) {
-      return `4px solid ${p.theme.color.arylideYellow}`
+    if (p.$isRecentlyUpdated) {
+      return `4px solid ${getColorWithAlpha(p.$isBackoffice ? p.theme.color.arylideYellow : p.theme.color.blueGray, 0.4)}`
     }
 
     return '4px solid transparent'

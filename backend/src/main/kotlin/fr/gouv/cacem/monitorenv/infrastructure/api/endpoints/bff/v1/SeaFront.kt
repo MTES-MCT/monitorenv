@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.SeaFront
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.locationtech.jts.io.WKTReader
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/sea-fronts")
+@PreAuthorize("hasRole('USER')")
 @Tag(description = "API Sea front", name = "BFF.Seafronts")
 class SeaFront(
     private val getAllSeaFronts: GetSeaFronts,

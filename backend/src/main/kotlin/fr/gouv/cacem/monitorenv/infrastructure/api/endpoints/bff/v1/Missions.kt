@@ -26,6 +26,7 @@ import jakarta.websocket.server.PathParam
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -38,6 +39,7 @@ import java.time.ZonedDateTime
 
 @RestController("MissionsV1")
 @RequestMapping("/bff/v1/missions")
+@PreAuthorize("hasRole('SUPER_USER')")
 @Tag(description = "API Missions", name = "BFF.Missions")
 class Missions(
     private val createOrUpdateMissionWithActionsAndAttachedReporting:
