@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "4.1.1"
+    id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
-    kotlin("plugin.allopen") version "2.3.21"
-    kotlin("plugin.noarg") version "2.3.21"
-    kotlin("plugin.jpa") version "2.3.21"
-    kotlin("plugin.serialization") version "2.3.21"
+    kotlin("jvm") version "2.4.21"
+    kotlin("plugin.spring") version "2.4.21"
+    kotlin("plugin.allopen") version "2.4.21"
+    kotlin("plugin.noarg") version "2.4.21"
+    kotlin("plugin.jpa") version "2.4.21"
+    kotlin("plugin.serialization") version "2.4.21"
 }
 
 repositories {
@@ -54,14 +54,14 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.4.3"
+val ktorVersion = "3.6.1"
 val testcontainersVersion = "1.21.4"
-val sentryVersion = "8.58.0"
+val sentryVersion = "8.62.0"
 val flywayVersion = "12.5.0"
 
 dependencies {
     implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.1"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.2"))
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -78,7 +78,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:7.4.11.Final")
+    implementation("org.hibernate.orm:hibernate-spatial:7.4.14.Final")
     implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.16.0")
     implementation("org.geolatte:geolatte-geom:1.12")
 
@@ -89,7 +89,7 @@ dependencies {
 
     // Jackson
     implementation("tools.jackson.module:jackson-module-kotlin")
-    implementation("org.n52.jackson:jackson-datatype-jts:3.0.4")
+    implementation("org.n52.jackson:jackson-datatype-jts:3.0.5")
 
     // HTTP Clients (Ktor)
     implementation("io.ktor:ktor-client-core")
@@ -102,10 +102,10 @@ dependencies {
     implementation("io.sentry:sentry-log4j2:$sentryVersion")
 
     // Cache
-    implementation("com.github.ben-manes.caffeine:caffeine:3.3.0")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.3.1")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0")
 
     // CSV
     implementation("org.apache.commons:commons-csv:1.14.1")
@@ -119,8 +119,8 @@ dependencies {
     implementation("org.imgscalr:imgscalr-lib:4.2")
 
     // SVG
-    implementation("org.apache.xmlgraphics:batik-transcoder:1.19")
-    implementation("org.apache.xmlgraphics:batik-codec:1.19")
+    implementation("org.apache.xmlgraphics:batik-transcoder:1.20")
+    implementation("org.apache.xmlgraphics:batik-codec:1.20")
 
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
@@ -139,8 +139,8 @@ dependencies {
     testImplementation("org.testcontainers:kafka:$testcontainersVersion")
     testImplementation("io.ktor:ktor-client-mock")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.5.0")
-    testImplementation("net.ttddyy:datasource-proxy:1.11.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.5.1")
+    testImplementation("net.ttddyy:datasource-proxy:1.11.1")
     testImplementation("io.mockk:mockk:1.14.11")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation("org.springframework.kafka:spring-kafka-test") {
