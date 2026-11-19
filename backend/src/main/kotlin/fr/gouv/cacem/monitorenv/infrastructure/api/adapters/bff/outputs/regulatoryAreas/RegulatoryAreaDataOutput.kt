@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
@@ -29,6 +30,7 @@ data class RegulatoryAreaDataOutput(
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
+    val propagatedFields: List<PropagatedFieldEnum> = listOf(),
     val refReg: String? = null,
     val resume: String? = null,
     val source: String? = null,
@@ -70,6 +72,7 @@ data class RegulatoryAreaDataOutput(
             additionalRefReg = regulatoryArea.additionalRefReg,
             authorizationPeriods = regulatoryArea.authorizationPeriods,
             prohibitionPeriods = regulatoryArea.prohibitionPeriods,
+            propagatedFields = regulatoryArea.propagatedFields,
         )
     }
 }

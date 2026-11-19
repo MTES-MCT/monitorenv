@@ -84,6 +84,10 @@ class JpaRegulatoryAreaRepository(
     }
 
     @Transactional
+    override fun findAllByIds(ids: List<Int>): List<RegulatoryAreaEntity> =
+        dbRegulatoryAreaRepository.findAllById(ids).map { it.toRegulatoryArea(mapper) }
+
+    @Transactional
     override fun findAllToComplete(): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository
             .findAllByCreationIsNull()

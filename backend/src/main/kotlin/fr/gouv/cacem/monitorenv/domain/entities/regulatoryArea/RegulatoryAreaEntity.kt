@@ -25,6 +25,8 @@ data class RegulatoryAreaEntity(
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
+    /** Only for groups: fields applied by default to the regulatory areas of the group */
+    val propagatedFields: List<PropagatedFieldEnum> = listOf(),
     val refReg: String? = null,
     val resume: String? = null,
     val source: String? = null,
@@ -76,6 +78,7 @@ data class RegulatoryAreaEntity(
         if (plan != other.plan) return false
         if (polyName != other.polyName) return false
         if (prohibitionPeriods != other.prohibitionPeriods) return false
+        if (propagatedFields != other.propagatedFields) return false
         if (refReg != other.refReg) return false
         if (resume != other.resume) return false
         if (source != other.source) return false
@@ -107,6 +110,7 @@ data class RegulatoryAreaEntity(
         result = 31 * result + (plan?.hashCode() ?: 0)
         result = 31 * result + (polyName?.hashCode() ?: 0)
         result = 31 * result + (prohibitionPeriods?.hashCode() ?: 0)
+        result = 31 * result + propagatedFields.hashCode()
         result = 31 * result + (refReg?.hashCode() ?: 0)
         result = 31 * result + (resume?.hashCode() ?: 0)
         result = 31 * result + (source?.hashCode() ?: 0)

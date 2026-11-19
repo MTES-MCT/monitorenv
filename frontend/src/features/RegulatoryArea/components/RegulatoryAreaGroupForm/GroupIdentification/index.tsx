@@ -3,14 +3,14 @@ import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Bold } from '@components/style'
 import { InformativeMessageForCopyData } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/InformativeMessageForCopyData'
 import { SubTitle } from '@features/RegulatoryArea/style'
-import { usePropagation, type Propagation } from '@features/RegulatoryArea/useCases/usePropagation'
+import { type Propagation, type RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
+import { getChangedPropagatedFields } from '@features/RegulatoryArea/useCases/usePropagation'
 import { FormikTextarea, Icon, Label, SingleTag, THEME } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { useFormikContext } from 'formik'
-import { isEqual } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -20,13 +20,17 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 type GroupIdentificationProps = {
   isNew: boolean
+  needsAnswer: (field: RegulatoryAreaGroupFields, hasGroupValueChanged: boolean) => boolean
   propagation: Propagation
+  setOverwrite: (field: RegulatoryAreaGroupFields, overwriteExisting: boolean) => void
 }
 
-export function GroupIdentification({ isNew, propagation }: GroupIdentificationProps) {
+export function GroupIdentification({ isNew, needsAnswer, propagation, setOverwrite }: GroupIdentificationProps) {
   const { initialValues, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaGroupToApi>()
 
-  const { setOverwrite } = usePropagation()
+  const changedFields = getChangedPropagatedFields(values, initialValues)
+  const isQuestionDisplayed = (field: RegulatoryAreaGroupFields) =>
+    !isNew && needsAnswer(field, changedFields.includes(field))
 
   const allThemesAndSubthemes = useMemo(
     () => values?.themes?.flatMap(theme => [...theme.subThemes, theme]),
@@ -54,7 +58,7 @@ export function GroupIdentification({ isNew, propagation }: GroupIdentificationP
   return (
     <>
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
-      {!isNew && !isEqual(values.themes, initialValues.themes) && (
+      {isQuestionDisplayed('THEMES') && (
         <InformativeMessageForCopyData
           onConfirm={() => setOverwrite('THEMES', true)}
           onReject={() => setOverwrite('THEMES', false)}
@@ -67,7 +71,7 @@ export function GroupIdentification({ isNew, propagation }: GroupIdentificationP
           title="Thématiques"
         />
       )}
-      {!isNew && !isEqual(values.tags, initialValues.tags) && (
+      {isQuestionDisplayed('TAGS') && (
         <InformativeMessageForCopyData
           onConfirm={() => setOverwrite('TAGS', true)}
           onReject={() => setOverwrite('TAGS', false)}
@@ -141,7 +145,7 @@ export function GroupIdentification({ isNew, propagation }: GroupIdentificationP
       )}
       {propagation.RESUME?.enabled && (
         <>
-          {!isNew && !isEqual(values.resume, initialValues.resume) && (
+          {isQuestionDisplayed('RESUME') && (
             <InformativeMessageForCopyData
               onConfirm={() => setOverwrite('RESUME', true)}
               onReject={() => setOverwrite('RESUME', false)}
@@ -165,7 +169,7 @@ export function GroupIdentification({ isNew, propagation }: GroupIdentificationP
       )}
       {withPeriods && (
         <>
-          {!isNew && !isEqual(values.authorizationPeriods, initialValues.authorizationPeriods) && (
+          {isQuestionDisplayed('AUTHORIZATION_PERIODS') && (
             <InformativeMessageForCopyData
               onConfirm={() => setOverwrite('AUTHORIZATION_PERIODS', true)}
               onReject={() => setOverwrite('AUTHORIZATION_PERIODS', false)}
@@ -178,7 +182,7 @@ export function GroupIdentification({ isNew, propagation }: GroupIdentificationP
               title="Période d'autorisation"
             />
           )}
-          {!isNew && !isEqual(values.prohibitionPeriods, initialValues.prohibitionPeriods) && (
+          {isQuestionDisplayed('PROHIBITION_PERIODS') && (
             <InformativeMessageForCopyData
               onConfirm={() => setOverwrite('PROHIBITION_PERIODS', true)}
               onReject={() => setOverwrite('PROHIBITION_PERIODS', false)}

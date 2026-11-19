@@ -5,6 +5,8 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagationOptionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
@@ -15,7 +17,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulator
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaGroupPropagationConflicts
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.PropagationConflictDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryAreaGroupDTO
@@ -80,6 +84,9 @@ class RegulatoryAreasITests {
 
     @MockitoBean
     private lateinit var createOrUpdateRegulatoryAreaGroup: CreateOrUpdateRegulatoryAreaGroup
+
+    @MockitoBean
+    private lateinit var getRegulatoryAreaGroupPropagationConflicts: GetRegulatoryAreaGroupPropagationConflicts
 
     @Autowired
     private lateinit var mapper: JsonMapper
@@ -770,5 +777,85 @@ class RegulatoryAreasITests {
             .andExpect(MockMvcResultMatchers.jsonPath("$[1].layerName", Matchers.equalTo("AMP_Test_Zone")))
             .andExpect(MockMvcResultMatchers.jsonPath("$[1].facade", Matchers.equalTo("MED")))
             .andExpect(MockMvcResultMatchers.jsonPath("$[1].plan", Matchers.equalTo("AMP")))
+    }
+
+    @Test
+    fun `Should get propagation conflicts`() {
+        // Given
+        BDDMockito
+            .given(
+                getRegulatoryAreaGroupPropagationConflicts.execute(
+                    listOf(1, 2),
+                    listOf(PropagatedFieldEnum.THEMES, PropagatedFieldEnum.RESUME),
+                ),
+            ).willReturn(
+                mapOf(
+                    PropagatedFieldEnum.THEMES to PropagationConflictDTO(1, 2),
+                    PropagatedFieldEnum.RESUME to PropagationConflictDTO(0, 2),
+                ),
+            )
+
+        // When
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .post("/bff/v1/regulatory-areas/groups/propagation-conflicts")
+                    .content("{\"regulatoryAreaIds\": [1, 2], \"fields\": [\"THEMES\", \"RESUME\"]}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.THEMES.regulatoryAreasWithExistingData", Matchers.equalTo(1)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.THEMES.totalRegulatoryAreas", Matchers.equalTo(2)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.RESUME.regulatoryAreasWithExistingData", Matchers.equalTo(0)))
+    }
+
+    @Test
+    fun `Should save a group with its propagation options`() {
+        // Given
+        val groupDTO =
+            aRegulatoryAreaGroupDTO().let {
+                it.copy(group = it.group.copy(propagatedFields = listOf(PropagatedFieldEnum.THEMES)))
+            }
+        BDDMockito
+            .given(
+                createOrUpdateRegulatoryAreaGroup.execute(
+                    argThat {
+                        propagation ==
+                            mapOf(
+                                PropagatedFieldEnum.THEMES to PropagationOptionEntity(true, true),
+                                PropagatedFieldEnum.RESUME to PropagationOptionEntity(false, null),
+                            ) &&
+                            resume == "Résumé" &&
+                            themes.map { it.id } == listOf(9)
+                    },
+                ),
+            ).willReturn(groupDTO)
+
+        val body =
+            """
+            {
+                "id": 1, "layerName": "Layername 1", "location": null, "regulatoryAreaIds": [1],
+                "date": null, "dateFin": null, "refReg": null, "type": null, "url": null, "additionalRefReg": null,
+                "resume": "Résumé",
+                "themes": [{"id": 9, "name": "Theme", "subThemes": []}],
+                "propagation": {
+                    "THEMES": {"enabled": true, "overwriteExisting": true},
+                    "RESUME": {"enabled": false}
+                }
+            }
+            """.trimIndent()
+
+        // When
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .put("/bff/v1/regulatory-areas/groups")
+                    .content(body)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.group.propagatedFields[0]", Matchers.equalTo("THEMES")))
     }
 }

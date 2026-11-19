@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
@@ -73,6 +74,9 @@ data class RegulatoryAreaModel(
     val additionalRefReg: JsonNode?,
     @Column(name = "authorization_periods") val authorizationPeriods: String?,
     @Column(name = "prohibition_periods") val prohibitionPeriods: String?,
+    @Column(name = "propagated_fields", columnDefinition = "text[]")
+    @Enumerated(EnumType.STRING)
+    val propagatedFields: List<PropagatedFieldEnum> = listOf(),
 ) {
     fun toRegulatoryArea(
         mapper: JsonMapper,
@@ -117,6 +121,7 @@ data class RegulatoryAreaModel(
             },
         authorizationPeriods = authorizationPeriods,
         prohibitionPeriods = prohibitionPeriods,
+        propagatedFields = propagatedFields,
     )
 
     companion object {

@@ -1,3 +1,4 @@
+import type { Propagation, RegulatoryAreaGroupFields } from './useCases/usePropagation'
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -25,6 +26,8 @@ export namespace RegulatoryArea {
     plan: string
     polyName: string
     prohibitionPeriods?: string
+    /** Only for groups: fields applied by default to the regulatory areas of the group */
+    propagatedFields?: RegulatoryAreaGroupFields[]
     refReg?: string
     resume?: string
     source?: string
@@ -93,6 +96,7 @@ export namespace RegulatoryArea {
     layerName?: string
     location?: string
     prohibitionPeriods?: string
+    propagation?: Propagation
     refReg?: string
     regulatoryAreaIds?: number[]
     resume?: string

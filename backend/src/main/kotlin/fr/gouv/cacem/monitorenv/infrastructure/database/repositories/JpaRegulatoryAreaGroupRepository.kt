@@ -1,32 +1,45 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaGroupEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaPk
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.geom.PrecisionModel
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import tools.jackson.databind.json.JsonMapper
+import java.time.Instant
 import java.time.ZonedDateTime
 
 @Repository
 class JpaRegulatoryAreaGroupRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository,
     private val dbRegulatoryAreaGroupRepository: IDBRegulatoryAreaGroupRepository,
+    private val dbTagRegulatoryAreaRepository: IDBTagRegulatoryAreaRepository,
+    private val dbThemeRegulatoryAreaRepository: IDBThemeRegulatoryAreaRepository,
     private val mapper: JsonMapper,
 ) : IRegulatoryAreaGroupRepository {
     override fun findAll(filters: SearchFilters): List<RegulatoryAreaGroupDTO> {
@@ -119,8 +132,28 @@ class JpaRegulatoryAreaGroupRepository(
         )
     }
 
+    override fun findGroupByRegulatoryAreaId(regulatoryAreaId: Int): RegulatoryAreaEntity? =
+        dbRegulatoryAreaGroupRepository
+            .findAllByRegulatoryAreaId(regulatoryAreaId)
+            .firstOrNull()
+            ?.group
+            ?.toRegulatoryArea(mapper)
+
+    override fun findGroupByLayerNameAndLocation(
+        layerName: String,
+        location: String?,
+    ): RegulatoryAreaEntity? =
+        dbRegulatoryAreaRepository
+            .findAllGroupByLayerNameAndLocation(layerName = layerName, location = location)
+            .singleOrNull()
+            ?.toRegulatoryArea(mapper)
+
+    @CacheEvict(value = ["regulatory_areas_tiles"], allEntries = true)
     @Transactional
-    override fun save(regulatoryAreaGroup: RegulatoryAreaGroupEntity): RegulatoryAreaGroupDTO {
+    override fun save(
+        regulatoryAreaGroup: RegulatoryAreaGroupEntity,
+        fieldsToCopy: Set<PropagatedFieldEnum>,
+    ): RegulatoryAreaGroupDTO {
         var id = regulatoryAreaGroup.id
         if (id == null) {
             id = dbRegulatoryAreaRepository.findNextId()
@@ -143,17 +176,26 @@ class JpaRegulatoryAreaGroupRepository(
                 plan = null,
                 polyName = null,
                 refReg = regulatoryAreaGroup.refReg,
-                resume = null,
+                resume = regulatoryAreaGroup.resume,
                 source = null,
                 tags = emptyList(),
                 themes = emptyList(),
                 type = regulatoryAreaGroup.type,
                 url = regulatoryAreaGroup.url,
                 additionalRefReg = regulatoryAreaGroup.additionalRefReg.let { mapper.valueToTree(it) },
-                authorizationPeriods = null,
-                prohibitionPeriods = null,
+                authorizationPeriods = regulatoryAreaGroup.authorizationPeriods,
+                prohibitionPeriods = regulatoryAreaGroup.prohibitionPeriods,
+                propagatedFields = regulatoryAreaGroup.propagatedFields.sorted(),
             )
-        val savedGroup = dbRegulatoryAreaRepository.save(groupToSave)
+        val savedGroup = dbRegulatoryAreaRepository.saveAndFlush(groupToSave)
+        replaceThemes(savedGroup, regulatoryAreaGroup.themes)
+        replaceTags(savedGroup, regulatoryAreaGroup.tags)
+
+        copyFieldsToRegulatoryAreas(
+            regulatoryAreaGroup = regulatoryAreaGroup,
+            regulatoryAreaIds = regulatoryAreaGroup.regulatoryAreaIds,
+            fieldsToCopy = fieldsToCopy,
+        )
 
         dbRegulatoryAreaRepository.updateLayerNameAndLocationByIds(
             layerName = regulatoryAreaGroup.layerName,
@@ -176,19 +218,81 @@ class JpaRegulatoryAreaGroupRepository(
                         group = dbRegulatoryAreaRepository.getReferenceById(id),
                     )
                 }
-            val savedRegulatoryAreaGroup = dbRegulatoryAreaGroupRepository.saveAll(regulatoryAreaGroupModels)
-            val group = savedRegulatoryAreaGroup.first().group.toRegulatoryArea(mapper)
-            val areas =
-                savedRegulatoryAreaGroup.map {
-                    it.regulatoryArea.toRegulatoryArea(
-                        mapper,
-                        savedRegulatoryAreaGroup.first().group,
-                    )
-                }
-
-            return RegulatoryAreaGroupDTO(group = group, areas = areas)
+            dbRegulatoryAreaGroupRepository.saveAll(regulatoryAreaGroupModels)
         }
 
-        return RegulatoryAreaGroupDTO(group = savedGroup.toRegulatoryArea(mapper), areas = emptyList())
+        // Re-read the group so that the themes, tags and copied fields reflect what has been saved
+        dbRegulatoryAreaRepository.flush()
+        return requireNotNull(findGroupById(id)) { "Regulatory area group $id not found after save" }
+    }
+
+    private fun copyFieldsToRegulatoryAreas(
+        regulatoryAreaGroup: RegulatoryAreaGroupEntity,
+        regulatoryAreaIds: List<Int>,
+        fieldsToCopy: Set<PropagatedFieldEnum>,
+    ) {
+        if (fieldsToCopy.isEmpty() || regulatoryAreaIds.isEmpty()) {
+            return
+        }
+
+        dbRegulatoryAreaRepository.findAllById(regulatoryAreaIds).forEach { regulatoryArea ->
+            val updatedRegulatoryArea =
+                regulatoryArea.copy(
+                    resume =
+                        if (PropagatedFieldEnum.RESUME in
+                            fieldsToCopy
+                        ) {
+                            regulatoryAreaGroup.resume
+                        } else {
+                            regulatoryArea.resume
+                        },
+                    authorizationPeriods =
+                        if (PropagatedFieldEnum.AUTHORIZATION_PERIODS in fieldsToCopy) {
+                            regulatoryAreaGroup.authorizationPeriods
+                        } else {
+                            regulatoryArea.authorizationPeriods
+                        },
+                    prohibitionPeriods =
+                        if (PropagatedFieldEnum.PROHIBITION_PERIODS in fieldsToCopy) {
+                            regulatoryAreaGroup.prohibitionPeriods
+                        } else {
+                            regulatoryArea.prohibitionPeriods
+                        },
+                    editionBo = Instant.now(),
+                )
+            val savedRegulatoryArea = dbRegulatoryAreaRepository.save(updatedRegulatoryArea)
+
+            if (PropagatedFieldEnum.THEMES in fieldsToCopy) {
+                replaceThemes(savedRegulatoryArea, regulatoryAreaGroup.themes)
+            }
+            if (PropagatedFieldEnum.TAGS in fieldsToCopy) {
+                replaceTags(savedRegulatoryArea, regulatoryAreaGroup.tags)
+            }
+        }
+        dbRegulatoryAreaRepository.flush()
+    }
+
+    private fun replaceThemes(
+        regulatoryArea: RegulatoryAreaModel,
+        themes: List<ThemeEntity>,
+    ) {
+        dbThemeRegulatoryAreaRepository.deleteAllByRegulatoryAreaId(regulatoryArea.id)
+        val themeModels =
+            ThemeRegulatoryAreaModel.fromThemesEntities(themes, regulatoryArea).onEach {
+                it.id = ThemeRegulatoryAreaPk(it.theme.id, regulatoryArea.id)
+            }
+        dbThemeRegulatoryAreaRepository.saveAll(themeModels)
+    }
+
+    private fun replaceTags(
+        regulatoryArea: RegulatoryAreaModel,
+        tags: List<TagEntity>,
+    ) {
+        dbTagRegulatoryAreaRepository.deleteAllByRegulatoryAreaId(regulatoryArea.id)
+        val tagModels =
+            TagRegulatoryAreaModel.fromTagEntities(tags, regulatoryArea).onEach {
+                it.id = TagRegulatoryAreaPk(it.tag.id, regulatoryArea.id)
+            }
+        dbTagRegulatoryAreaRepository.saveAll(tagModels)
     }
 }
