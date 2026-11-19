@@ -147,10 +147,7 @@ services:
 
   keycloak:
     container_name: monitorenv_keycloak
-    profiles: [ dev ]
-    image: quay.io/keycloak/keycloak:latest
-    labels:
-      io.portainer.accesscontrol.teams: "monitorfish"
+    image: quay.io/keycloak/keycloak:23.0.0
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
@@ -163,6 +160,12 @@ services:
     command:
       - start-dev
       - --import-realm
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'" ]
+      interval: 30s
+      timeout: 5s
+      retries: 20
 
   mock-geoserver:
     profiles: [ test ]

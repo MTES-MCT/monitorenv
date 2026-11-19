@@ -36,7 +36,7 @@ test-front:
 # Backend
 .PHONY: dev-run-back-with-infra dev-run-back  dev-run-keycloak dev-run-infra dev-erase-db dev-clean-build-env
 
-dev-run-back-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back
+dev-run-back-with-infra: dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back
 
 dev-run-back-debug-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back-debug
 
@@ -133,7 +133,7 @@ docker-push-latest:
 test-init-infra-env:
 	npm i @import-meta-env/prepare@0.1.13 && npx import-meta-env-prepare -u -x ./.env.infra.example -p ./.env.test.defaults
 test-run-infra-for-frontend:
-	export MONITORENV_VERSION=$(VERSION) && docker compose --profile=test -f docker-compose.yml -f docker-compose-test.yml up -d
+	export MONITORENV_VERSION=$(VERSION) && docker compose --profile=test -f docker-compose.yml -f docker-compose-test.yml -f docker-compose-cypress.yml up -d
 test: test-back
 	cd frontend && CI=true npm run test:unit
 
