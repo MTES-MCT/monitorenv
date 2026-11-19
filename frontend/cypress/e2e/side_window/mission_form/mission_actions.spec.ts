@@ -43,7 +43,7 @@ context('Side Window > Mission Form > Mission actions', () => {
   it('An infraction Should be duplicated', () => {
     // Given
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
-    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('action-card').eq(3).click()
     cy.getDataCy('control-form-number-controls').type('{backspace}2')
     cy.getDataCy('infraction-form').should('not.exist')
 
@@ -79,7 +79,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
   it('Save observations in control Actions', () => {
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
-    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('action-card').eq(3).click()
 
     cy.getDataCy('control-form-observations').contains('RAS')
 
@@ -120,7 +120,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.intercept('GET', '/api/v1/themes*').as('getThemes')
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
     cy.wait(250)
-    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('action-card').eq(2).click()
     cy.wait(250)
     cy.wait('@getThemes')
 
@@ -191,7 +191,7 @@ context('Side Window > Mission Form > Mission actions', () => {
   it('Should duplicate control and surveillance', () => {
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
 
-    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('action-card').eq(3).click()
     cy.get('input[name="isControlAttachedToReporting"]').should('be.checked')
 
     cy.clickButton('Dupliquer le contrôle')
@@ -201,21 +201,21 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     // Attach reporting to surveillance
     cy.wait(250)
-    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('action-card').eq(2).click()
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
     cy.fill('Signalements', ['6'])
     cy.wait(250)
     // duplicate surveillance from timeline
     cy.clickButton("Dupliquer l'action")
     cy.wait(500)
-    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('action-card').eq(3).click()
     // The duplicate surveillance should be the "active" action and attached reporting should be removed
     cy.get('input[name="isSurveillanceAttachedToReporting"]').should('be.not.checked')
     // The duplicate control should be the "active" action and attached reporting should be removed
     cy.get('input[name="isSurveillanceAttachedToReporting"]').should('be.not.checked')
     cy.clickButton('Supprimer la surveillance')
 
-    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('action-card').eq(2).click()
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
   })
 
@@ -223,7 +223,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Given
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
     cy.wait(500)
-    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('action-card').eq(2).click()
 
     cy.wait(500)
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
