@@ -1,5 +1,5 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
-import { type EntityState } from '@reduxjs/toolkit'
+import { createSelector, type EntityState } from '@reduxjs/toolkit'
 
 import { monitorenvPublicApi } from './api'
 
@@ -31,3 +31,8 @@ export const themesAPI = monitorenvPublicApi.injectEndpoints({
 })
 
 export const { useGetThemesQuery } = themesAPI
+
+export const getThemesByIds = createSelector(
+  [themesAPI.endpoints.getThemes.select(), (_, ids: number[]) => ids],
+  ({ data }, ids) => ids.map(id => data?.entities[id]).filter(theme => theme !== undefined)
+)

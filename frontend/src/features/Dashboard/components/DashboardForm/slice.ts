@@ -16,13 +16,14 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 const migrations = {
   // Start at 4 because test platform and migrations cant downgrade
-  4: (state: any) => dashboardsFiltersMigrations.v2(state)
+  4: (state: any) => dashboardsFiltersMigrations.v2(state),
+  5: (state: any) => dashboardsFiltersMigrations.v3(state)
 }
 const persistConfig = {
   key: 'dashboardFilters_V2',
   migrate: createMigrate(migrations),
   storage,
-  version: 4
+  version: 5
 }
 
 export const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
@@ -89,10 +90,12 @@ export type DashboardFilters = {
 }
 
 export type DashboardsListFilters = {
+  administrations: number[]
   controlUnits: number[]
-  regulatoryTags: string[]
   seaFronts: string[]
   specificPeriod?: DateAsStringRange
+  tags: number[]
+  themes: number[]
   updatedAt: DateRangeEnum
 }
 
@@ -114,10 +117,12 @@ type DashboardFiltersState = {
 }
 
 export const INITIAL_LIST_FILTERS_STATE: DashboardsListFilters = {
+  administrations: [],
   controlUnits: [],
-  regulatoryTags: [],
   seaFronts: [],
   specificPeriod: undefined,
+  tags: [],
+  themes: [],
   updatedAt: DateRangeEnum.MONTH
 }
 

@@ -5,9 +5,7 @@ export function ControlUnitsCell({ controlUnitIds }: { controlUnitIds: number[] 
 
   const filteredControlUnits = controlUnits?.filter(controlUnit => controlUnitIds.includes(controlUnit.id)) ?? []
 
-  const controlUnitsAsText = filteredControlUnits
-    .map(controlUnit => `${controlUnit.name} (${controlUnit.administration.name})`)
-    .join(' / ')
+  const controlUnitsAsText = filteredControlUnits.map(controlUnit => controlUnit.name).join(' / ')
 
   return <span title={controlUnitsAsText}>{controlUnitsAsText}</span>
 }
