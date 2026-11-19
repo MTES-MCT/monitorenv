@@ -1,36 +1,84 @@
-import { useMemo, useState } from 'react'
+import { useGetPropagationConflictsQuery } from '@api/regulatoryAreasAPI'
+import { skipToken } from '@reduxjs/toolkit/query'
+import { isEqual } from 'lodash'
+import { useEffect, useMemo, useState } from 'react'
+
+import type { RegulatoryArea } from '../types'
 
 export type RegulatoryAreaGroupFields = 'THEMES' | 'TAGS' | 'RESUME' | 'AUTHORIZATION_PERIODS' | 'PROHIBITION_PERIODS'
 export type PropagationOption = { enabled: boolean; overwriteExisting?: boolean }
-// type Conflicts = Partial<Record<RegulatoryAreaGroupFields, { totalZones: number; zonesWithExistingData: number }>>
-
 export type Propagation = Partial<Record<RegulatoryAreaGroupFields, PropagationOption>>
-export function usePropagation(/* zoneIds: number[] */) {
-  const [propagation, setPropagation] = useState<Propagation>({})
+export type PropagationConflicts = Partial<
+  Record<RegulatoryAreaGroupFields, { regulatoryAreasWithExistingData: number; totalRegulatoryAreas: number }>
+>
 
-  const enabledFields = useMemo(
-    () => (Object.keys(propagation) as RegulatoryAreaGroupFields[]).filter(f => propagation[f]?.enabled),
-    [propagation]
+/** Form value holding the group value of each propagated field */
+export const PROPAGATED_FIELD_TO_FORM_KEY: Record<
+  RegulatoryAreaGroupFields,
+  keyof RegulatoryArea.RegulatoryAreaGroupToApi
+> = {
+  AUTHORIZATION_PERIODS: 'authorizationPeriods',
+  PROHIBITION_PERIODS: 'prohibitionPeriods',
+  RESUME: 'resume',
+  TAGS: 'tags',
+  THEMES: 'themes'
+}
+
+const toPropagation = (propagatedFields: RegulatoryAreaGroupFields[] = []): Propagation =>
+  Object.fromEntries(propagatedFields.map(field => [field, { enabled: true }]))
+
+const getEnabledFields = (propagation: Propagation) =>
+  (Object.keys(propagation) as RegulatoryAreaGroupFields[]).filter(field => propagation[field]?.enabled).sort()
+
+/**
+ * @param regulatoryAreaIds ids of the regulatory areas currently in the group
+ * @param savedPropagatedFields fields propagated by the saved group
+ */
+export function usePropagation(regulatoryAreaIds: number[], savedPropagatedFields?: RegulatoryAreaGroupFields[]) {
+  const [propagation, setPropagation] = useState<Propagation>(() => toPropagation(savedPropagatedFields))
+
+  // Reset when the group is (re)loaded, e.g. after a save
+  useEffect(() => {
+    setPropagation(toPropagation(savedPropagatedFields))
+  }, [savedPropagatedFields])
+
+  const enabledFields = useMemo(() => getEnabledFields(propagation), [propagation])
+
+  const { data: conflicts = {} } = useGetPropagationConflictsQuery(
+    enabledFields.length > 0 && regulatoryAreaIds.length > 0 ? { fields: enabledFields, regulatoryAreaIds } : skipToken,
+    { refetchOnMountOrArgChange: true }
   )
 
-  const { data: conflicts = {} } = {} /* useQuery<Conflicts>({
-    queryKey: ['propagation-conflicts', zoneIds, enabledFields],
-    queryFn: () => api.post('/regulatory-areas/propagation-conflicts', { zoneIds, fields: enabledFields }),
-    enabled: enabledFields.length > 0 && zoneIds.length > 0
-  })
- */
   const toggle = (field: RegulatoryAreaGroupFields, enabled: boolean) =>
     setPropagation(p => ({ ...p, [field]: { enabled, overwriteExisting: undefined } }))
 
   const setOverwrite = (field: RegulatoryAreaGroupFields, overwriteExisting: boolean) =>
-    setPropagation(p => ({ ...p, [field]: { ...p[field]!, overwriteExisting } }))
+    setPropagation(p => ({ ...p, [field]: { enabled: p[field]?.enabled ?? false, overwriteExisting } }))
 
-  // La question Oui/Non n'est posée que s'il y a vraiment un conflit
-  const needsAnswer = (field: RegulatoryAreaGroupFields) =>
-    propagation[field]?.enabled && (conflicts[field]?.zonesWithExistingData ?? 0) > 0
+  /**
+   * The "overwrite?" question is asked only when the group value changed
+   * and some regulatory areas already have a value that would be overwritten.
+   */
+  const needsAnswer = (field: RegulatoryAreaGroupFields, hasGroupValueChanged: boolean) =>
+    !!propagation[field]?.enabled &&
+    hasGroupValueChanged &&
+    (conflicts[field]?.regulatoryAreasWithExistingData ?? 0) > 0
 
-  // Le bouton « Créer le groupe » est bloqué tant qu'une question reste sans réponse
-  const isValid = enabledFields.every(f => !needsAnswer(f) || propagation[f]?.overwriteExisting !== undefined)
+  /** The group can't be saved while a question remains unanswered */
+  const isValid = (changedFields: RegulatoryAreaGroupFields[]) =>
+    enabledFields.every(
+      field => !needsAnswer(field, changedFields.includes(field)) || propagation[field]?.overwriteExisting !== undefined
+    )
 
-  return { conflicts, isValid, needsAnswer, propagation, setOverwrite, toggle }
+  const isDirty = !isEqual(enabledFields, getEnabledFields(toPropagation(savedPropagatedFields)))
+
+  return { conflicts, isDirty, isValid, needsAnswer, propagation, setOverwrite, toggle }
 }
+
+export const getChangedPropagatedFields = (
+  values: RegulatoryArea.RegulatoryAreaGroupToApi,
+  initialValues: RegulatoryArea.RegulatoryAreaGroupToApi
+): RegulatoryAreaGroupFields[] =>
+  (Object.keys(PROPAGATED_FIELD_TO_FORM_KEY) as RegulatoryAreaGroupFields[]).filter(
+    field => !isEqual(values[PROPAGATED_FIELD_TO_FORM_KEY[field]], initialValues[PROPAGATED_FIELD_TO_FORM_KEY[field]])
+  )

@@ -19,7 +19,11 @@ import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/Regula
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
-import { usePropagation, type RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
+import {
+  getChangedPropagatedFields,
+  usePropagation,
+  type RegulatoryAreaGroupFields
+} from '@features/RegulatoryArea/useCases/usePropagation'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Checkbox, FormikTextInput, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
@@ -85,8 +89,18 @@ export function RegulatoryAreaGroupForm() {
   )
   const { data: layerNames } = useGetLayerNamesQuery()
 
-  const regulatoryAreaIds = regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? []
-  const { propagation, toggle } = usePropagation(/* regulatoryAreaIds */)
+  const regulatoryAreaIds = useMemo(
+    () => regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? [],
+    [regulatoryAreaGroup?.regulatoryAreas]
+  )
+  const {
+    isDirty: isPropagationDirty,
+    isValid: isPropagationValid,
+    needsAnswer,
+    propagation,
+    setOverwrite,
+    toggle
+  } = usePropagation(regulatoryAreaIds, regulatoryAreaGroup?.group.propagatedFields)
 
   const layerNameOptions = useMemo(() => {
     const formattedLayerNames = (layerNames ?? [])
@@ -132,7 +146,7 @@ export function RegulatoryAreaGroupForm() {
   const [navigateCallback, setNavigateCallback] = useState(() => backToList)
 
   const saveRegulatoryAreaGroup = async (group: RegulatoryArea.RegulatoryAreaGroupToApi) => {
-    const savedRegulatoryAreaGroup = await dispatch(createOrUpdateRegulatoryAreaGroup(group))
+    const savedRegulatoryAreaGroup = await dispatch(createOrUpdateRegulatoryAreaGroup({ ...group, propagation }))
     if (savedRegulatoryAreaGroup?.group.id && !location.pathname.includes(`${savedRegulatoryAreaGroup.group.id}`)) {
       navigate(
         `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/${savedRegulatoryAreaGroup.group.id}`,
@@ -205,7 +219,7 @@ export function RegulatoryAreaGroupForm() {
         validateOnChange={false}
         validationSchema={RegulatoryAreaGroupFormSchema}
       >
-        {({ dirty, handleSubmit, values }) => (
+        {({ dirty, handleSubmit, initialValues: formInitialValues, values }) => (
           <RegulatoryWrapper>
             <header>
               <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
@@ -292,7 +306,14 @@ export function RegulatoryAreaGroupForm() {
                     ))}
                   </CommonPropertiesWrapper>
                 </section>
-                {withIdentification && <GroupIdentification isNew={isNew} propagation={propagation} />}
+                {withIdentification && (
+                  <GroupIdentification
+                    isNew={isNew}
+                    needsAnswer={needsAnswer}
+                    propagation={propagation}
+                    setOverwrite={setOverwrite}
+                  />
+                )}
 
                 <RegulatoryTexts isNew={isNew} />
               </FormContent>
@@ -301,7 +322,13 @@ export function RegulatoryAreaGroupForm() {
                 <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
                   Fermer
                 </Button>
-                <Button disabled={!dirty} type="submit">
+                <Button
+                  disabled={
+                    !(dirty || isPropagationDirty) ||
+                    !isPropagationValid(getChangedPropagatedFields(values, formInitialValues))
+                  }
+                  type="submit"
+                >
                   {isNew ? 'Créer le groupe' : 'Enregistrer les modifications'}
                 </Button>
               </Footer>

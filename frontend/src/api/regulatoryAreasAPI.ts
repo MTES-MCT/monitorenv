@@ -8,6 +8,7 @@ import { orderBy } from 'lodash'
 import { monitorenvPrivateApi } from './api'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
+import type { PropagationConflicts, RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
 import type { HomeRootState } from '@store/index'
 
 const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
@@ -30,6 +31,18 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       providesTags: () => [{ id: 'LAYERS_NAME', type: 'RegulatoryAreas' }],
       query: () => 'v1/regulatory-areas/layer-names',
       transformErrorResponse: response => new FrontendApiError(GET_LAYER_NAMES_ERROR_MESSAGE, response)
+    }),
+    getPropagationConflicts: builder.query<
+      PropagationConflicts,
+      { fields: RegulatoryAreaGroupFields[]; regulatoryAreaIds: number[] }
+    >({
+      providesTags: () => [{ id: 'PROPAGATION_CONFLICTS', type: 'RegulatoryAreas' }],
+      query: body => ({ body, method: 'POST', url: 'v1/regulatory-areas/groups/propagation-conflicts' }),
+      transformErrorResponse: response =>
+        new FrontendApiError(
+          "Nous n'avons pas pu vérifier les données actuelles des réglementations du groupe",
+          response
+        )
     }),
     getRegulatoryAreaById: builder.query<RegulatoryArea.RegulatoryAreaFromAPI, number>({
       providesTags: (_, __, id) => [{ id, type: 'RegulatoryAreas' }],
@@ -79,7 +92,8 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
         { id: 'LIST', type: 'RegulatoryAreas' },
         { id: 'TO_COMPLETE', type: 'RegulatoryAreas' },
         { id: 'GROUP_BY_ID', type: 'RegulatoryAreas' },
-        { id: 'LAYERS_NAME', type: 'RegulatoryAreas' }
+        { id: 'LAYERS_NAME', type: 'RegulatoryAreas' },
+        { id: 'PROPAGATION_CONFLICTS', type: 'RegulatoryAreas' }
       ],
       query: regulatoryArea => ({
         body: regulatoryArea,
@@ -96,7 +110,8 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
         { id: 'LIST', type: 'RegulatoryAreas' },
         { id: 'TO_COMPLETE', type: 'RegulatoryAreas' },
         { id: 'GROUP_BY_ID', type: 'RegulatoryAreas' },
-        { id: 'LAYERS_NAME', type: 'RegulatoryAreas' }
+        { id: 'LAYERS_NAME', type: 'RegulatoryAreas' },
+        { id: 'PROPAGATION_CONFLICTS', type: 'RegulatoryAreas' }
       ],
       query: regulatoryAreaGroup => ({
         body: regulatoryAreaGroup,
@@ -111,6 +126,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
 
 export const {
   useGetLayerNamesQuery,
+  useGetPropagationConflictsQuery,
   useGetRegulatoryAreaByIdQuery,
   useGetRegulatoryAreaGroupByIdQuery,
   useGetRegulatoryAreasByIdsQuery,

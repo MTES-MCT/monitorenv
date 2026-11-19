@@ -20,6 +20,9 @@ interface IRegulatoryAreaRepository {
         axis: AxisEnum,
     ): List<RegulatoryAreaEntity>
 
+    /** Returns the regulatory areas with their own values (without the values inherited from their group) */
+    fun findAllByIds(ids: List<Int>): List<RegulatoryAreaEntity>
+
     fun findAllToComplete(): List<RegulatoryAreaEntity>
 
     fun findById(id: Int): RegulatoryAreaEntity?
