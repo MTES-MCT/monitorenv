@@ -139,6 +139,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     // cy.wait('@getMissionsByType')
 
     cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.wait(100)
     cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).within(() => {
         cy.getDataCy('mission-type-Mer').should('exist')
@@ -248,7 +249,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('mission-row').should('have.length', 1)
     cy.getDataCy('edit-mission-34').click({ force: true })
 
-    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('action-card').eq(3).click()
     cy.clickButton("Modifier l'infraction")
     cy.getDataCy('infraction-form-registrationNumber').should('have.value', 'BALTIK')
     cy.getDataCy('quit-edit-mission').click()

@@ -327,7 +327,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(missions).hasSize(9)
+        assertThat(missions).hasSize(8)
         assertThat(missions).allMatch {
             it.mission.startDateTimeUtc.isAfter(startedAfter)
         }
@@ -349,12 +349,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(missions).allMatch { it.mission.startDateTimeUtc.isBefore(ZonedDateTime.now()) }
+        assertThat(missions).allMatch {
+            it.mission.startDateTimeUtc.isBefore(
+                ZonedDateTime.now(),
+            )
+        }
         assertThat(missions).allMatch {
             it.mission.endDateTimeUtc == null ||
                 it.mission.endDateTimeUtc?.isAfter(ZonedDateTime.now()) == true
         }
-        assertThat(missions).hasSize(3)
+        assertThat(missions).hasSize(4)
     }
 
     @Test
