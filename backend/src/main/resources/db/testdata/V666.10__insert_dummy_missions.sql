@@ -243,7 +243,7 @@ INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_date
                              completed_by, deleted, observations_cnsp, mission_source, mission_order, mission_types)
 VALUES (34, 'STS',
         'Surface different shoulder interview. Job together area probably. Of alone class capital determine machine always.',
-        'MEMN', '2022-07-15 21:03:12.588693', '2022-07-16 22:03:12.588693',
+        'MEMN', '2022-05-30 21:03:12.588693', '2022-06-02 22:03:12.588693',
         '0106000020E61000000100000001030000000100000009000000AD0812BCE168E4BFCCDEEA3227BD4840BE63AEABD812E4BF1C5E8873F8AC484044BD156CA117DABF84C0E2AF49AC48408E16A14DE463CCBFBC9F7168A2A5484008BF4C12D0F97B3F9494F5EA3CAB4840399BF9438A28B43FDC4BF050D9BB48404BAA02B73C2CCCBF24A79C8362CD4840BC46F7A9D24DE1BFA0238D36B2D04840AD0812BCE168E4BFCCDEEA3227BD4840',
         'JAM', false, NULL, 'MONITORENV', NULL, '{SEA}');
 INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom,

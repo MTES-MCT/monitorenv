@@ -204,11 +204,11 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.fill('Unité 1', 'DF 25 Libecciu', { delay: 100 })
+    cy.fill('Unité 1', 'A636 Maïto', { delay: 100 })
     cy.clickOutside()
     cy.wait(200)
-    cy.getDataCy('add-control-administration').contains('Douane')
-    cy.getDataCy('add-control-unit').contains('DF 25 Libecciu')
+    cy.getDataCy('add-control-administration').contains('Marine Nationale')
+    cy.getDataCy('add-control-unit').contains('A636 Maïto')
     cy.wait(200)
 
     cy.intercept('PUT', `/bff/v1/missions/*`).as('updateMission')
@@ -260,10 +260,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.fill('Unité 1', 'DF 61 Port-de-Bouc', { delay: 100 })
+    cy.fill('Unité 1', 'P602 Verdon', { delay: 100 })
     cy.wait(200)
-    cy.getDataCy('add-control-administration').contains('Douane')
-    cy.getDataCy('add-control-unit').contains('DF 61 Port-de-Bouc')
+    cy.getDataCy('add-control-administration').contains('Gendarmerie Maritime')
+    cy.getDataCy('add-control-unit').contains('P602 Verdon')
 
     cy.wait(400)
 
