@@ -75,7 +75,7 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
   return (
     <SelectableRowsTable
       ref={tableContainerRef}
-      className="missions-table"
+      className="dashboard-table"
       columnsLength={columns.length}
       rows={
         <>

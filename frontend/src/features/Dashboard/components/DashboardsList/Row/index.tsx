@@ -12,6 +12,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { TagsDetailsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/TagsDetailsCell'
 import { ThemesDetailsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/ThemesDetailsCell'
 import { type Row as RowType } from '@tanstack/react-table'
+import styled from 'styled-components'
 
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
@@ -57,7 +58,7 @@ export function Row({
             </ExpandedRowList>
           </ExpandedRowCell>
           <ExpandedRowCell colSpan={2}>
-            <ExpandedRowList>
+            <CustomExpandedRowList>
               {dashboard.regulatoryAreaIds.length > 0 && (
                 <li>
                   <ExpandedRowLabel>Zones reg.</ExpandedRowLabel>
@@ -82,10 +83,16 @@ export function Row({
                   <ExpandedRowValue>{dashboard.reportingIds.length}</ExpandedRowValue>
                 </li>
               )}
-            </ExpandedRowList>
+            </CustomExpandedRowList>
           </ExpandedRowCell>
         </ExpandedRow>
       )}
     </BaseRow>
   )
 }
+
+export const CustomExpandedRowList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
