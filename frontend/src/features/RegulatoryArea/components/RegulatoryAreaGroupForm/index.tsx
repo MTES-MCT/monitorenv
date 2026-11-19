@@ -19,11 +19,7 @@ import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/Regula
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
-import {
-  getChangedPropagatedFields,
-  usePropagation,
-  type RegulatoryAreaGroupFields
-} from '@features/RegulatoryArea/useCases/usePropagation'
+import { usePropagation, type RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Checkbox, FormikTextInput, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
@@ -89,18 +85,20 @@ export function RegulatoryAreaGroupForm() {
   )
   const { data: layerNames } = useGetLayerNamesQuery()
 
-  const regulatoryAreaIds = useMemo(
-    () => regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? [],
+  const regulatoryAreas = useMemo(
+    () => regulatoryAreaGroup?.regulatoryAreas ?? [],
     [regulatoryAreaGroup?.regulatoryAreas]
   )
   const {
+    conflicts,
+    hasRegulatoryAreasNotUsingGroupValue,
     isDirty: isPropagationDirty,
     isValid: isPropagationValid,
     needsAnswer,
     propagation,
     setOverwrite,
     toggle
-  } = usePropagation(regulatoryAreaIds, regulatoryAreaGroup?.group.propagatedFields)
+  } = usePropagation(regulatoryAreas, regulatoryAreaGroup?.group.propagatedFields)
 
   const layerNameOptions = useMemo(() => {
     const formattedLayerNames = (layerNames ?? [])
@@ -131,7 +129,7 @@ export function RegulatoryAreaGroupForm() {
     location: regulatoryAreaGroup?.group.location,
     prohibitionPeriods: regulatoryAreaGroup?.group.prohibitionPeriods,
     refReg: regulatoryAreaGroup?.group.refReg,
-    regulatoryAreaIds,
+    regulatoryAreaIds: regulatoryAreas.map(({ id }) => id),
     resume: regulatoryAreaGroup?.group.resume,
     tags: regulatoryAreaGroup?.group.tags,
     themes: regulatoryAreaGroup?.group.themes,
@@ -219,7 +217,7 @@ export function RegulatoryAreaGroupForm() {
         validateOnChange={false}
         validationSchema={RegulatoryAreaGroupFormSchema}
       >
-        {({ dirty, handleSubmit, initialValues: formInitialValues, values }) => (
+        {({ dirty, handleSubmit, values }) => (
           <RegulatoryWrapper>
             <header>
               <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
@@ -308,6 +306,8 @@ export function RegulatoryAreaGroupForm() {
                 </section>
                 {withIdentification && (
                   <GroupIdentification
+                    conflicts={conflicts}
+                    hasRegulatoryAreasNotUsingGroupValue={hasRegulatoryAreasNotUsingGroupValue}
                     isNew={isNew}
                     needsAnswer={needsAnswer}
                     propagation={propagation}
@@ -322,13 +322,7 @@ export function RegulatoryAreaGroupForm() {
                 <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
                   Fermer
                 </Button>
-                <Button
-                  disabled={
-                    !(dirty || isPropagationDirty) ||
-                    !isPropagationValid(getChangedPropagatedFields(values, formInitialValues))
-                  }
-                  type="submit"
-                >
+                <Button disabled={!(dirty || isPropagationDirty) || !isPropagationValid} type="submit">
                   {isNew ? 'Créer le groupe' : 'Enregistrer les modifications'}
                 </Button>
               </Footer>

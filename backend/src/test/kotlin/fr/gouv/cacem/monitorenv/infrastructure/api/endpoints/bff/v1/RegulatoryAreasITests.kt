@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
 
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.isNull
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
@@ -694,6 +695,7 @@ class RegulatoryAreasITests {
                     argThat {
                         id == 17
                     },
+                    isNull(),
                 ),
             ).willReturn(updatedRegulatoryArea)
 
@@ -790,8 +792,8 @@ class RegulatoryAreasITests {
                 ),
             ).willReturn(
                 mapOf(
-                    PropagatedFieldEnum.THEMES to PropagationConflictDTO(1, 2),
-                    PropagatedFieldEnum.RESUME to PropagationConflictDTO(0, 2),
+                    PropagatedFieldEnum.THEMES to PropagationConflictDTO(listOf(regulatoryArea), 2),
+                    PropagatedFieldEnum.RESUME to PropagationConflictDTO(listOf(), 2),
                 ),
             )
 
@@ -805,9 +807,22 @@ class RegulatoryAreasITests {
             )
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.THEMES.regulatoryAreasWithExistingData", Matchers.equalTo(1)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.THEMES.totalRegulatoryAreas", Matchers.equalTo(2)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.RESUME.regulatoryAreasWithExistingData", Matchers.equalTo(0)))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.THEMES.regulatoryAreasWithExistingData[0].id", Matchers.equalTo(17)),
+            ).andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "$.THEMES.regulatoryAreasWithExistingData[0].themes[0].name",
+                    Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
+                ),
+            ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.THEMES.regulatoryAreasWithExistingData[0].geom").doesNotExist(),
+            ).andExpect(MockMvcResultMatchers.jsonPath("$.THEMES.totalRegulatoryAreas", Matchers.equalTo(2)))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "$.RESUME.regulatoryAreasWithExistingData.length()",
+                    Matchers.equalTo(0),
+                ),
+            )
     }
 
     @Test

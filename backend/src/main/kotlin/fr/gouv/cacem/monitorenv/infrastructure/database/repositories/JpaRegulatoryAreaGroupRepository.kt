@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaGroupEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
@@ -152,7 +151,7 @@ class JpaRegulatoryAreaGroupRepository(
     @Transactional
     override fun save(
         regulatoryAreaGroup: RegulatoryAreaGroupEntity,
-        fieldsToCopy: Set<PropagatedFieldEnum>,
+        regulatoryAreasToUpdate: List<RegulatoryAreaEntity>,
     ): RegulatoryAreaGroupDTO {
         var id = regulatoryAreaGroup.id
         if (id == null) {
@@ -191,11 +190,7 @@ class JpaRegulatoryAreaGroupRepository(
         replaceThemes(savedGroup, regulatoryAreaGroup.themes)
         replaceTags(savedGroup, regulatoryAreaGroup.tags)
 
-        copyFieldsToRegulatoryAreas(
-            regulatoryAreaGroup = regulatoryAreaGroup,
-            regulatoryAreaIds = regulatoryAreaGroup.regulatoryAreaIds,
-            fieldsToCopy = fieldsToCopy,
-        )
+        updateRegulatoryAreas(regulatoryAreasToUpdate)
 
         dbRegulatoryAreaRepository.updateLayerNameAndLocationByIds(
             layerName = regulatoryAreaGroup.layerName,
@@ -226,48 +221,30 @@ class JpaRegulatoryAreaGroupRepository(
         return requireNotNull(findGroupById(id)) { "Regulatory area group $id not found after save" }
     }
 
-    private fun copyFieldsToRegulatoryAreas(
-        regulatoryAreaGroup: RegulatoryAreaGroupEntity,
-        regulatoryAreaIds: List<Int>,
-        fieldsToCopy: Set<PropagatedFieldEnum>,
-    ) {
-        if (fieldsToCopy.isEmpty() || regulatoryAreaIds.isEmpty()) {
+    private fun updateRegulatoryAreas(regulatoryAreas: List<RegulatoryAreaEntity>) {
+        if (regulatoryAreas.isEmpty()) {
             return
         }
 
-        dbRegulatoryAreaRepository.findAllById(regulatoryAreaIds).forEach { regulatoryArea ->
-            val updatedRegulatoryArea =
-                regulatoryArea.copy(
-                    resume =
-                        if (PropagatedFieldEnum.RESUME in
-                            fieldsToCopy
-                        ) {
-                            regulatoryAreaGroup.resume
-                        } else {
-                            regulatoryArea.resume
-                        },
-                    authorizationPeriods =
-                        if (PropagatedFieldEnum.AUTHORIZATION_PERIODS in fieldsToCopy) {
-                            regulatoryAreaGroup.authorizationPeriods
-                        } else {
-                            regulatoryArea.authorizationPeriods
-                        },
-                    prohibitionPeriods =
-                        if (PropagatedFieldEnum.PROHIBITION_PERIODS in fieldsToCopy) {
-                            regulatoryAreaGroup.prohibitionPeriods
-                        } else {
-                            regulatoryArea.prohibitionPeriods
-                        },
-                    editionBo = Instant.now(),
+        val regulatoryAreaModels =
+            dbRegulatoryAreaRepository
+                .findAllById(
+                    regulatoryAreas.map { it.id },
+                ).associateBy { it.id }
+        regulatoryAreas.forEach { regulatoryArea ->
+            val regulatoryAreaModel = regulatoryAreaModels.getValue(regulatoryArea.id)
+            val savedRegulatoryArea =
+                dbRegulatoryAreaRepository.save(
+                    regulatoryAreaModel.copy(
+                        authorizationPeriods = regulatoryArea.authorizationPeriods,
+                        editionBo = Instant.now(),
+                        inheritedFields = regulatoryArea.inheritedFields,
+                        prohibitionPeriods = regulatoryArea.prohibitionPeriods,
+                        resume = regulatoryArea.resume,
+                    ),
                 )
-            val savedRegulatoryArea = dbRegulatoryAreaRepository.save(updatedRegulatoryArea)
-
-            if (PropagatedFieldEnum.THEMES in fieldsToCopy) {
-                replaceThemes(savedRegulatoryArea, regulatoryAreaGroup.themes)
-            }
-            if (PropagatedFieldEnum.TAGS in fieldsToCopy) {
-                replaceTags(savedRegulatoryArea, regulatoryAreaGroup.tags)
-            }
+            replaceThemes(savedRegulatoryArea, regulatoryArea.themes)
+            replaceTags(savedRegulatoryArea, regulatoryArea.tags)
         }
         dbRegulatoryAreaRepository.flush()
     }

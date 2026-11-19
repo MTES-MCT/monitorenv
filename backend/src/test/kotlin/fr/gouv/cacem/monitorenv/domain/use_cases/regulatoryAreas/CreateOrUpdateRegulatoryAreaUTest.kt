@@ -70,35 +70,68 @@ class CreateOrUpdateRegulatoryAreaUTest {
     }
 
     @Test
-    fun `execute should fill the empty fields of a regulatory area joining a group with the group values`() {
+    fun `execute should make a regulatory area joining a group inherit all the fields propagated by the group`() {
         // Given
         val regulatoryArea = RegulatoryAreaFixture.aRegulatoryArea(id = 1, resume = "résumé de la zone")
         given(regulatoryAreaGroupRepository.findGroupByLayerNameAndLocation("Layername 1", null)).willReturn(group)
         given(regulatoryAreaGroupRepository.findGroupByRegulatoryAreaId(1)).willReturn(null)
-        val expectedRegulatoryArea = regulatoryArea.copy(themes = group.themes)
+        val expectedRegulatoryArea =
+            regulatoryArea.copy(
+                themes = group.themes,
+                resume = "résumé du groupe",
+                tags = listOf(),
+                inheritedFields =
+                    listOf(PropagatedFieldEnum.THEMES, PropagatedFieldEnum.TAGS, PropagatedFieldEnum.RESUME),
+            )
         given(regulatoryAreaRepository.save(expectedRegulatoryArea)).willReturn(expectedRegulatoryArea)
 
         // When
-        val result = createOrUpdateRegulatoryArea.execute(regulatoryArea)
+        createOrUpdateRegulatoryArea.execute(regulatoryArea, inheritedFields = listOf())
 
         // Then
-        // Themes are copied, the resume of the zone is kept, prohibition periods are not propagated by the group
+        // Prohibition periods are not propagated by the group
         verify(regulatoryAreaRepository).save(expectedRegulatoryArea)
-        assertThat(result).isEqualTo(expectedRegulatoryArea)
     }
 
     @Test
-    fun `execute should not apply the group values when the regulatory area was already in the group`() {
+    fun `execute should apply the inherited fields sent for a regulatory area already in the group`() {
         // Given
-        val regulatoryArea = RegulatoryAreaFixture.aRegulatoryArea(id = 1)
+        val regulatoryArea =
+            RegulatoryAreaFixture.aRegulatoryArea(id = 1, resume = "valeur envoyée", prohibitionPeriods = "été")
         given(regulatoryAreaGroupRepository.findGroupByLayerNameAndLocation("Layername 1", null)).willReturn(group)
         given(regulatoryAreaGroupRepository.findGroupByRegulatoryAreaId(1)).willReturn(group)
-        given(regulatoryAreaRepository.save(regulatoryArea)).willReturn(regulatoryArea)
+        val expectedRegulatoryArea =
+            regulatoryArea.copy(resume = "résumé du groupe", inheritedFields = listOf(PropagatedFieldEnum.RESUME))
+        given(regulatoryAreaRepository.save(expectedRegulatoryArea)).willReturn(expectedRegulatoryArea)
 
         // When
-        createOrUpdateRegulatoryArea.execute(regulatoryArea)
+        createOrUpdateRegulatoryArea.execute(
+            regulatoryArea,
+            // PROHIBITION_PERIODS is not propagated by the group: it can't be inherited
+            inheritedFields = listOf(PropagatedFieldEnum.RESUME, PropagatedFieldEnum.PROHIBITION_PERIODS),
+        )
 
         // Then
-        verify(regulatoryAreaRepository).save(regulatoryArea)
+        verify(regulatoryAreaRepository).save(expectedRegulatoryArea)
+    }
+
+    @Test
+    fun `execute should keep the current inherited fields when none are sent`() {
+        // Given
+        val regulatoryArea = RegulatoryAreaFixture.aRegulatoryArea(id = 1, themes = listOf())
+        given(regulatoryAreaGroupRepository.findGroupByLayerNameAndLocation("Layername 1", null)).willReturn(group)
+        given(regulatoryAreaGroupRepository.findGroupByRegulatoryAreaId(1)).willReturn(group)
+        given(regulatoryAreaRepository.findById(1)).willReturn(
+            regulatoryArea.copy(inheritedFields = listOf(PropagatedFieldEnum.THEMES)),
+        )
+        val expectedRegulatoryArea =
+            regulatoryArea.copy(themes = group.themes, inheritedFields = listOf(PropagatedFieldEnum.THEMES))
+        given(regulatoryAreaRepository.save(expectedRegulatoryArea)).willReturn(expectedRegulatoryArea)
+
+        // When
+        createOrUpdateRegulatoryArea.execute(regulatoryArea, inheritedFields = null)
+
+        // Then
+        verify(regulatoryAreaRepository).save(expectedRegulatoryArea)
     }
 }

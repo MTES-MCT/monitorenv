@@ -176,7 +176,10 @@ class RegulatoryAreas(
         @RequestBody regulatoryAreaDataInput: RegulatoryAreaDataInput,
     ): RegulatoryAreaDataOutput =
         RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
-            createOrUpdateRegulatoryArea.execute(regulatoryAreaDataInput.toRegulatoryAreaEntity()),
+            createOrUpdateRegulatoryArea.execute(
+                regulatoryArea = regulatoryAreaDataInput.toRegulatoryAreaEntity(),
+                inheritedFields = regulatoryAreaDataInput.inheritedFields,
+            ),
         )
 
     @GetMapping("/layer-names")
@@ -217,7 +220,7 @@ class RegulatoryAreas(
 
     @PostMapping("/groups/propagation-conflicts")
     @Operation(
-        summary = "For each field, count the regulatory areas whose current value would be overwritten by the group value",
+        summary = "For each field, list the regulatory areas whose current value would be overwritten by the group value",
     )
     fun getPropagationConflicts(
         @RequestBody
