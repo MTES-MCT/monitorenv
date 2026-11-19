@@ -91,7 +91,7 @@ export const Columns = (
     accessorFn: row => row,
     cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <TotalSelectedItemsCell row={row} />),
     enableSorting: true,
-    header: () => "Nb d'éléments sélectionnés",
+    header: () => 'Nb sélections',
     id: 'totalSelectedItems',
     size: 150 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<Dashboard.Dashboard>, rowB: Row<Dashboard.Dashboard>) => {
