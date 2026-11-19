@@ -24,6 +24,7 @@ class RegulatoryAreaFixture {
             authorizationPeriods: String? = null,
             prohibitionPeriods: String? = null,
             propagatedFields: List<PropagatedFieldEnum> = listOf(),
+            inheritedFields: List<PropagatedFieldEnum> = listOf(),
         ): RegulatoryAreaEntity =
             RegulatoryAreaEntity(
                 id = id,
@@ -34,6 +35,7 @@ class RegulatoryAreaFixture {
                 authorizationPeriods = authorizationPeriods,
                 prohibitionPeriods = prohibitionPeriods,
                 propagatedFields = propagatedFields,
+                inheritedFields = inheritedFields,
                 facade = facade,
                 layerName = layerName,
                 location = location,

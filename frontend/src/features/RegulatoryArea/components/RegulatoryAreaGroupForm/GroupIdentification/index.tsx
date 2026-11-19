@@ -1,9 +1,14 @@
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Bold } from '@components/style'
+import { GroupValueOnlyMessage } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/GroupValueOnlyMessage'
 import { InformativeMessageForCopyData } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/InformativeMessageForCopyData'
 import { SubTitle } from '@features/RegulatoryArea/style'
-import { type Propagation, type RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
+import {
+  type Propagation,
+  type PropagationConflicts,
+  type RegulatoryAreaGroupFields
+} from '@features/RegulatoryArea/useCases/usePropagation'
 import { getChangedPropagatedFields } from '@features/RegulatoryArea/useCases/usePropagation'
 import { FormikTextarea, Icon, Label, SingleTag, THEME } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
@@ -19,18 +24,30 @@ import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
 type GroupIdentificationProps = {
+  conflicts: PropagationConflicts
+  hasRegulatoryAreasNotUsingGroupValue: (field: RegulatoryAreaGroupFields) => boolean
   isNew: boolean
-  needsAnswer: (field: RegulatoryAreaGroupFields, hasGroupValueChanged: boolean) => boolean
+  needsAnswer: (field: RegulatoryAreaGroupFields) => boolean
   propagation: Propagation
   setOverwrite: (field: RegulatoryAreaGroupFields, overwriteExisting: boolean) => void
 }
 
-export function GroupIdentification({ isNew, needsAnswer, propagation, setOverwrite }: GroupIdentificationProps) {
+export function GroupIdentification({
+  conflicts,
+  hasRegulatoryAreasNotUsingGroupValue,
+  isNew,
+  needsAnswer,
+  propagation,
+  setOverwrite
+}: GroupIdentificationProps) {
   const { initialValues, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaGroupToApi>()
 
   const changedFields = getChangedPropagatedFields(values, initialValues)
-  const isQuestionDisplayed = (field: RegulatoryAreaGroupFields) =>
-    !isNew && needsAnswer(field, changedFields.includes(field))
+  const isQuestionDisplayed = (field: RegulatoryAreaGroupFields) => !isNew && needsAnswer(field)
+  const isGroupValueOnlyMessageDisplayed = (field: RegulatoryAreaGroupFields) =>
+    !isNew && changedFields.includes(field) && hasRegulatoryAreasNotUsingGroupValue(field)
+  const getConflictingRegulatoryAreas = (field: RegulatoryAreaGroupFields) =>
+    conflicts[field]?.regulatoryAreasWithExistingData ?? []
 
   const allThemesAndSubthemes = useMemo(
     () => values?.themes?.flatMap(theme => [...theme.subThemes, theme]),
@@ -58,10 +75,13 @@ export function GroupIdentification({ isNew, needsAnswer, propagation, setOverwr
   return (
     <>
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
+      {isGroupValueOnlyMessageDisplayed('THEMES') && <GroupValueOnlyMessage />}
       {isQuestionDisplayed('THEMES') && (
         <InformativeMessageForCopyData
+          field="THEMES"
           onConfirm={() => setOverwrite('THEMES', true)}
           onReject={() => setOverwrite('THEMES', false)}
+          regulatoryAreas={getConflictingRegulatoryAreas('THEMES')}
           text={
             <>
               Les <Bold>thématiques sélectionnés</Bold> doivent-elles modifier les{' '}
@@ -71,10 +91,13 @@ export function GroupIdentification({ isNew, needsAnswer, propagation, setOverwr
           title="Thématiques"
         />
       )}
+      {isGroupValueOnlyMessageDisplayed('TAGS') && <GroupValueOnlyMessage />}
       {isQuestionDisplayed('TAGS') && (
         <InformativeMessageForCopyData
+          field="TAGS"
           onConfirm={() => setOverwrite('TAGS', true)}
           onReject={() => setOverwrite('TAGS', false)}
+          regulatoryAreas={getConflictingRegulatoryAreas('TAGS')}
           text={
             <>
               Les <Bold>tags sélectionnés</Bold> doivent-elles modifier les{' '}
@@ -145,10 +168,13 @@ export function GroupIdentification({ isNew, needsAnswer, propagation, setOverwr
       )}
       {propagation.RESUME?.enabled && (
         <>
+          {isGroupValueOnlyMessageDisplayed('RESUME') && <GroupValueOnlyMessage />}
           {isQuestionDisplayed('RESUME') && (
             <InformativeMessageForCopyData
+              field="RESUME"
               onConfirm={() => setOverwrite('RESUME', true)}
               onReject={() => setOverwrite('RESUME', false)}
+              regulatoryAreas={getConflictingRegulatoryAreas('RESUME')}
               text={
                 <>
                   Le <Bold>thème sélectionné</Bold> doit-il modifier le{' '}
@@ -169,10 +195,13 @@ export function GroupIdentification({ isNew, needsAnswer, propagation, setOverwr
       )}
       {withPeriods && (
         <>
+          {isGroupValueOnlyMessageDisplayed('AUTHORIZATION_PERIODS') && <GroupValueOnlyMessage />}
           {isQuestionDisplayed('AUTHORIZATION_PERIODS') && (
             <InformativeMessageForCopyData
+              field="AUTHORIZATION_PERIODS"
               onConfirm={() => setOverwrite('AUTHORIZATION_PERIODS', true)}
               onReject={() => setOverwrite('AUTHORIZATION_PERIODS', false)}
+              regulatoryAreas={getConflictingRegulatoryAreas('AUTHORIZATION_PERIODS')}
               text={
                 <>
                   La <Bold>période d&apos;autorisation ajoutée</Bold> doit-elle modifier les{' '}
@@ -182,10 +211,13 @@ export function GroupIdentification({ isNew, needsAnswer, propagation, setOverwr
               title="Période d'autorisation"
             />
           )}
+          {isGroupValueOnlyMessageDisplayed('PROHIBITION_PERIODS') && <GroupValueOnlyMessage />}
           {isQuestionDisplayed('PROHIBITION_PERIODS') && (
             <InformativeMessageForCopyData
+              field="PROHIBITION_PERIODS"
               onConfirm={() => setOverwrite('PROHIBITION_PERIODS', true)}
               onReject={() => setOverwrite('PROHIBITION_PERIODS', false)}
+              regulatoryAreas={getConflictingRegulatoryAreas('PROHIBITION_PERIODS')}
               text={
                 <>
                   La <Bold>période d&apos;interdiction ajoutée</Bold> doit-elle modifier les{' '}

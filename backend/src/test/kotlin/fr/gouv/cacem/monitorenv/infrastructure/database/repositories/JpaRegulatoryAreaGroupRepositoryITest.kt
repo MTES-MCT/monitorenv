@@ -156,7 +156,7 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save should save the group values and copy only the given fields to its regulatory areas`() {
+    fun `save should save the group values and the given regulatory areas`() {
         // Given
         val existingGroup = requireNotNull(jpaRegulatoryAreaGroupRepository.findGroupByRegulatoryAreaId(17))
         val previousAreas = requireNotNull(jpaRegulatoryAreaGroupRepository.findGroupById(existingGroup.id)).areas
@@ -179,14 +179,22 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
                 propagation =
                     mapOf(
                         THEMES to PropagationOptionEntity(enabled = true, overwriteExisting = true),
-                        RESUME to PropagationOptionEntity(enabled = true, overwriteExisting = true),
+                        RESUME to PropagationOptionEntity(enabled = true),
                         PROHIBITION_PERIODS to PropagationOptionEntity(enabled = true, overwriteExisting = false),
                         TAGS to PropagationOptionEntity(enabled = false),
                     ),
             )
+        val areaToUpdate =
+            previousAreas.first { it.id == 17 }.let {
+                it.copy(
+                    themes = listOf(aTheme(id = 9)),
+                    resume = "Résumé du groupe",
+                    inheritedFields = listOf(THEMES, RESUME),
+                )
+            }
 
         // When
-        val savedGroup = jpaRegulatoryAreaGroupRepository.save(group, setOf(THEMES, RESUME))
+        val savedGroup = jpaRegulatoryAreaGroupRepository.save(group, listOf(areaToUpdate))
 
         // Then
         assertThat(savedGroup.group.resume).isEqualTo("Résumé du groupe")
@@ -196,14 +204,17 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
         assertThat(savedGroup.group.propagatedFields).containsExactly(THEMES, RESUME, PROHIBITION_PERIODS)
 
         assertThat(savedGroup.areas.map { it.id }).containsExactlyInAnyOrderElementsOf(regulatoryAreaIds)
-        savedGroup.areas.forEach { area ->
+        val updatedArea = savedGroup.areas.first { it.id == 17 }
+        assertThat(updatedArea.themes.map { it.id }).containsExactly(9)
+        assertThat(updatedArea.resume).isEqualTo("Résumé du groupe")
+        assertThat(updatedArea.inheritedFields).containsExactly(THEMES, RESUME)
+        assertThat(updatedArea.tags).isEqualTo(previousAreas.first { it.id == 17 }.tags)
+        // The other regulatory areas are not changed
+        savedGroup.areas.filter { it.id != 17 }.forEach { area ->
             val previousArea = previousAreas.first { it.id == area.id }
-            // Copied fields
-            assertThat(area.themes.map { it.id }).containsExactly(9)
-            assertThat(area.resume).isEqualTo("Résumé du groupe")
-            // Not copied fields
-            assertThat(area.prohibitionPeriods).isEqualTo(previousArea.prohibitionPeriods)
-            assertThat(area.tags).isEqualTo(previousArea.tags)
+            assertThat(area.themes).isEqualTo(previousArea.themes)
+            assertThat(area.resume).isEqualTo(previousArea.resume)
+            assertThat(area.inheritedFields).isEmpty()
         }
     }
 }

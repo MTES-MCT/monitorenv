@@ -18,6 +18,8 @@ export namespace RegulatoryArea {
     geom?: GeoJSON.MultiPolygon
     hasGeomChangedRecently: boolean
     id: number
+    /** Only for regulatory areas: fields whose value comes from the group */
+    inheritedFields?: RegulatoryAreaGroupFields[]
     isNew: boolean
     isUpdatedRecently: boolean
     layerName: string

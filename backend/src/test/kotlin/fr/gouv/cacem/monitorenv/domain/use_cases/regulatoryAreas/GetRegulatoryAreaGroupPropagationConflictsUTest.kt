@@ -18,26 +18,30 @@ class GetRegulatoryAreaGroupPropagationConflictsUTest {
     private val getPropagationConflicts = GetRegulatoryAreaGroupPropagationConflicts(regulatoryAreaRepository)
 
     @Test
-    fun `execute should count the regulatory areas that already have data for each field`() {
+    fun `execute should list the regulatory areas that already have data for each field`() {
         // Given
-        given(regulatoryAreaRepository.findAllByIds(listOf(1, 2, 3))).willReturn(
-            listOf(
-                aRegulatoryArea(id = 1, themes = listOf(aTheme()), tags = listOf(aTag())),
-                aRegulatoryArea(id = 2, themes = listOf(aTheme()), prohibitionPeriods = " "),
-                aRegulatoryArea(id = 3),
-            ),
-        )
+        val area1 = aRegulatoryArea(id = 1, themes = listOf(aTheme()), tags = listOf(aTag()))
+        val area2 = aRegulatoryArea(id = 2, themes = listOf(aTheme()), prohibitionPeriods = " ")
+        val area3 = aRegulatoryArea(id = 3)
+        // Uses the group value: not a conflict
+        val area4 = aRegulatoryArea(id = 4, themes = listOf(aTheme()), inheritedFields = listOf(THEMES))
+        given(regulatoryAreaRepository.findAllByIds(listOf(1, 2, 3, 4))).willReturn(listOf(area1, area2, area3, area4))
 
         // When
-        val conflicts = getPropagationConflicts.execute(listOf(1, 2, 3), listOf(THEMES, TAGS, PROHIBITION_PERIODS))
+        val conflicts = getPropagationConflicts.execute(listOf(1, 2, 3, 4), listOf(THEMES, TAGS, PROHIBITION_PERIODS))
 
         // Then
         assertThat(conflicts).isEqualTo(
             mapOf(
-                THEMES to PropagationConflictDTO(regulatoryAreasWithExistingData = 2, totalRegulatoryAreas = 3),
-                TAGS to PropagationConflictDTO(regulatoryAreasWithExistingData = 1, totalRegulatoryAreas = 3),
+                THEMES to
+                    PropagationConflictDTO(
+                        regulatoryAreasWithExistingData = listOf(area1, area2),
+                        totalRegulatoryAreas = 4,
+                    ),
+                TAGS to
+                    PropagationConflictDTO(regulatoryAreasWithExistingData = listOf(area1), totalRegulatoryAreas = 4),
                 PROHIBITION_PERIODS to
-                    PropagationConflictDTO(regulatoryAreasWithExistingData = 0, totalRegulatoryAreas = 3),
+                    PropagationConflictDTO(regulatoryAreasWithExistingData = listOf(), totalRegulatoryAreas = 4),
             ),
         )
     }
@@ -49,7 +53,9 @@ class GetRegulatoryAreaGroupPropagationConflictsUTest {
 
         // Then
         assertThat(conflicts).isEqualTo(
-            mapOf(THEMES to PropagationConflictDTO(regulatoryAreasWithExistingData = 0, totalRegulatoryAreas = 0)),
+            mapOf(
+                THEMES to PropagationConflictDTO(regulatoryAreasWithExistingData = listOf(), totalRegulatoryAreas = 0),
+            ),
         )
     }
 }

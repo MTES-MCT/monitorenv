@@ -7,8 +7,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.Propagatio
 import org.slf4j.LoggerFactory
 
 /**
- * For each field, counts the regulatory areas that already hold a value, i.e. the ones whose value
- * would be overwritten by the value of the group.
+ * For each field, lists the regulatory areas that have their own value (i.e. they don't inherit it from the group),
+ * the ones whose value would be overwritten if they started inheriting the field.
  */
 @UseCase
 class GetRegulatoryAreaGroupPropagationConflicts(
@@ -30,7 +30,8 @@ class GetRegulatoryAreaGroupPropagationConflicts(
 
         return fields.associateWith { field ->
             PropagationConflictDTO(
-                regulatoryAreasWithExistingData = regulatoryAreas.count { field.hasData(it) },
+                regulatoryAreasWithExistingData =
+                    regulatoryAreas.filter { field !in it.inheritedFields && field.hasData(it) },
                 totalRegulatoryAreas = regulatoryAreas.size,
             )
         }

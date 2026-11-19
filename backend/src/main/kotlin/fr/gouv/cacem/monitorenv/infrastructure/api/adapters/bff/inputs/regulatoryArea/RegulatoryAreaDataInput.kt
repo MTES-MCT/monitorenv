@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulato
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
@@ -19,6 +20,8 @@ data class RegulatoryAreaDataInput(
     val editionCacem: ZonedDateTime? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
+    /** Fields for which the regulatory area uses the group value. `null` keeps the current ones */
+    val inheritedFields: List<PropagatedFieldEnum>? = null,
     val layerName: String? = null,
     val observation: String? = null,
     val additionalRefReg: List<AdditionalRefRegEntity>? = listOf(),

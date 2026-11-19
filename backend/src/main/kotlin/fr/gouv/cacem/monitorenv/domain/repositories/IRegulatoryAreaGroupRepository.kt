@@ -23,11 +23,12 @@ interface IRegulatoryAreaGroupRepository {
     fun findAllLayerNames(): List<RegulatoryAreaGroupWithTotalDTO>
 
     /**
-     * Saves the group and, in the same transaction, copies the values of [fieldsToCopy]
-     * from the group to all the regulatory areas of the group.
+     * Saves the group and, in the same transaction, the given regulatory areas of the group.
+     * For [regulatoryAreasToUpdate], only the propagated fields (see [PropagatedFieldEnum])
+     * and the inherited fields are written.
      */
     fun save(
         regulatoryAreaGroup: RegulatoryAreaGroupEntity,
-        fieldsToCopy: Set<PropagatedFieldEnum>,
+        regulatoryAreasToUpdate: List<RegulatoryAreaEntity>,
     ): RegulatoryAreaGroupDTO
 }
