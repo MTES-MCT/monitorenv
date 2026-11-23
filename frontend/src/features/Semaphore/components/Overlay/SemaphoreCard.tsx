@@ -6,7 +6,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { ReportingSourceEnum, StatusFilterEnum } from 'domain/entities/reporting'
+import { ReportingSourceEnum } from 'domain/entities/reporting'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { removeOverlayStroke, ReportingContext } from 'domain/shared_slices/Global'
 import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
@@ -105,7 +105,7 @@ export function SemaphoreCard({ feature, selected = false }: SemaphoreCardProps)
     dispatch(
       reportingsFiltersActions.updateFilters({
         key: ReportingsFiltersEnum.STATUS_FILTER,
-        value: [StatusFilterEnum.IN_PROGRESS, StatusFilterEnum.ARCHIVED]
+        value: undefined
       })
     )
     dispatch(
