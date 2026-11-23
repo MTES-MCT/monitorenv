@@ -55,7 +55,29 @@ tag_final AS (
         jsonb_object_agg(parent_name, children) AS tags_json
     FROM tag_grouped
     GROUP BY ra_id
+),
+
+-- Geometries overshooting the valid longitude / latitude range by a fraction of a
+-- degree are rejected by the Géoplateforme, which refuses the whole delivery.
+valid_geometries AS (
+    SELECT
+        id,
+        CASE
+            WHEN ST_XMin(geom) < -180 OR ST_XMax(geom) > 180
+                OR ST_YMin(geom) < -90 OR ST_YMax(geom) > 90
+            -- Clipping rewrites the vertex order, so it is only applied to the
+            -- geometries that need it.
+            THEN ST_Multi(
+                ST_Intersection(
+                    ST_CurveToLine(geom),
+                    ST_MakeEnvelope(-180, -90, 180, 90, 4326)
+                )
+            )
+            ELSE ST_CurveToLine(geom)
+        END AS geometry
+    FROM public.regulatory_areas
 )
+
 SELECT
     ra.id,
     ra.creation::timestamp,
@@ -70,11 +92,11 @@ SELECT
     COALESCE(grp.date, ra.date)::timestamp                                           AS date,
     COALESCE(grp.date_fin, ra.date_fin)::timestamp                                   AS date_fin,
     COALESCE(grp.type, ra.type)                                                      AS type,
-    ST_ASTEXT(ST_CurveToLine(ra.geom))                                               AS wkt,
+    ST_ASTEXT(valid_geometries.geometry)                                             AS wkt,
     COALESCE(grp.resume, ra.resume)                                                  AS resume,
     ra.poly_name,
     ra.plan,
-    ra.geom                                                                          AS geometry,
+    valid_geometries.geometry                                                        AS geometry,
     COALESCE(grp.authorization_periods, ra.authorization_periods)                    AS authorization_periods,
     COALESCE(grp.prohibition_periods, ra.prohibition_periods)                        AS prohibition_periods,
     COALESCE(grp.additional_ref_reg, ra.additional_ref_reg)                          AS additional_ref_reg,
@@ -90,5 +112,7 @@ LEFT JOIN theme_final AS reg_theme_final ON reg_theme_final.ra_id = ra.id
 LEFT JOIN tag_final AS reg_tag_final ON reg_tag_final.ra_id = ra.id
 LEFT JOIN theme_final AS group_theme_final ON group_theme_final.ra_id = grp.id
 LEFT JOIN tag_final AS group_tag_final ON group_tag_final.ra_id = grp.id
+INNER JOIN valid_geometries
+  ON valid_geometries.id = ra.id
 WHERE ra.layer_name IS NOT NULL
   AND ra.area_type = 'ZONE';
