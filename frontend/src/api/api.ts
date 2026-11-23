@@ -1,3 +1,4 @@
+import { CSRF_HEADER_NAME, getCsrfToken } from '@api/csrf'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { normalizeRtkBaseQuery } from '@utils/normalizeRtkBaseQuery'
 
@@ -9,7 +10,15 @@ import type { BackendApiErrorResponse } from './types'
 // We'll need that later on for authentication.
 const monitorenvPrivateApiQuery = fetchBaseQuery({
   baseUrl: '/bff',
-  credentials: 'include'
+  credentials: 'include',
+  prepareHeaders: headers => {
+    const csrfToken = getCsrfToken()
+    if (csrfToken) {
+      headers.set(CSRF_HEADER_NAME, csrfToken)
+    }
+
+    return headers
+  }
 })
 export const monitorenvPrivateApi = createApi({
   baseQuery: async (args, api, extraOptions) => {

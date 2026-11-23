@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
+import fr.gouv.cacem.monitorenv.config.OIDCProperties
 import fr.gouv.cacem.monitorenv.domain.use_cases.authorization.GetAuthorizedUser
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.users.UserAuthorizationDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "APIs for authorization")
 class UserAuthorization(
     private val getAuthorizedUser: GetAuthorizedUser,
+    private val oidcProperties: OIDCProperties,
 ) {
     private val logger = LoggerFactory.getLogger(UserAuthorization::class.java)
 
@@ -33,7 +35,7 @@ class UserAuthorization(
         @AuthenticationPrincipal principal: OidcUser?,
     ): UserAuthorizationDataOutput? {
         logger.info("Getting current user authorization $principal")
-        if (principal == null) {
+        if (oidcProperties.enabled == false && principal == null) {
             logger.info("Getting current user authorization - OIDC disabled, returning default authorization")
             val authorizedUser = getAuthorizedUser.execute(null)
             return UserAuthorizationDataOutput.fromUserAuthorization(
@@ -41,8 +43,8 @@ class UserAuthorization(
             )
         }
 
-        logger.info("Getting current user authorization for user: ${principal.email}")
-        val authorizedUser = getAuthorizedUser.execute(principal.email)
+        logger.info("Getting current user authorization for user: ${principal?.email}")
+        val authorizedUser = getAuthorizedUser.execute(principal?.email)
 
         return UserAuthorizationDataOutput.fromUserAuthorization(
             authorizedUser = authorizedUser,

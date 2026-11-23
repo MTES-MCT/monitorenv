@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import com.nhaarman.mockitokotlin2.any
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.ArchiveAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CanArchiveAdministration
@@ -13,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministratio
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.administrations.CreateOrUpdateAdministrationDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Administrations
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -20,10 +19,10 @@ import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -35,10 +34,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser
 @WebMvcTest(value = [(Administrations::class)])
-class AdministrationsITests {
+class AdministrationsITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -72,7 +70,7 @@ class AdministrationsITests {
 
         mockMvc
             .perform(
-                put("/api/v1/administrations/$administrationId/archive"),
+                put("/api/v1/administrations/$administrationId/archive").with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
 
@@ -129,7 +127,8 @@ class AdministrationsITests {
             .perform(
                 post("/api/v1/administrations")
                     .content(requestBody)
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
     }
@@ -140,7 +139,7 @@ class AdministrationsITests {
 
         mockMvc
             .perform(
-                delete("/api/v1/administrations/$administrationId"),
+                delete("/api/v1/administrations/$administrationId").with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
 
@@ -228,7 +227,8 @@ class AdministrationsITests {
             .perform(
                 put("/api/v1/administrations/1")
                     .content(requestBody)
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
     }

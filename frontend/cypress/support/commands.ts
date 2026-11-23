@@ -1,6 +1,7 @@
 import { registerMonitorUiCustomCommands } from '@mtes-mct/monitor-ui/cypress'
 
 import { getFeaturesFromLayer } from './commands/getFeaturesFromLayer'
+import { login } from './commands/login'
 
 registerMonitorUiCustomCommands()
 function unquote(str: string): string {
@@ -8,6 +9,7 @@ function unquote(str: string): string {
 }
 
 Cypress.Commands.add('getFeaturesFromLayer', getFeaturesFromLayer)
+Cypress.Commands.add('login', login)
 Cypress.Commands.add(
   'before',
   {

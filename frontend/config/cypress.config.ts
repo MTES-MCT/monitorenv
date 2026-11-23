@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress'
 
 const IS_CI = Boolean(process.env.CI)
 const WEBAPP_PORT = IS_CI ? 8880 : 3000
-const WEBAPP_HOST = 'localhost'
+const WEBAPP_HOST = IS_CI ? '0.0.0.0' : 'localhost'
 
 export default defineConfig({
   e2e: {

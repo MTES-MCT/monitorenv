@@ -59,6 +59,12 @@ val testcontainersVersion = "1.21.4"
 val sentryVersion = "8.58.0"
 val flywayVersion = "12.5.0"
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.1.3")
+    }
+}
+
 dependencies {
     implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
     implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.1"))
@@ -124,6 +130,9 @@ dependencies {
 
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
+    // Renamed from spring-cloud-gateway-mvc in Spring Cloud 2025.x; version managed by the BOM so it
+    // stays compatible with Spring Boot 4. Keeps the org.springframework.cloud.gateway.mvc.* package.
+    implementation("org.springframework.cloud:spring-cloud-gateway-proxyexchange-webmvc")
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")

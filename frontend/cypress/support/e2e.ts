@@ -20,6 +20,7 @@ declare global {
       ): void
       getFeaturesFromLayer(layerName: string, layerPixel: [number, number]): Cypress.Chainable<Array<FeatureLike>>
       loadPath(path: string): void
+      login(user: string): void
     }
   }
 }

@@ -7,14 +7,15 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix = "monitorenv.oidc")
 class OIDCProperties {
     var enabled: Boolean? = false
-    var bypassEmailDomainsFilter: String? = "false"
     var clientId: String = ""
     var clientSecret: String = ""
     var redirectUri: String = ""
     var loginUrl: String = ""
     var successUrl: String = ""
     var errorUrl: String = ""
-    var authorizedEmailDomains: List<String> = listOf()
+
+    /** Defaults to the origin of `successUrl`. */
+    var allowedOrigins: List<String> = listOf()
     var issuerUri: String = ""
 
     /**
@@ -35,7 +36,7 @@ class OIDCProperties {
      * ⚠️ DEVELOPMENT ONLY - Keycloak proxy URL
      *
      * This property is only used when running Keycloak locally in E2E tests
-     * and local development. It specifies the URL of the build.gtKeycloak server
+     * and local development. It specifies the URL of the Keycloak server
      * that the KeycloakProxyController should proxy requests to.
      *
      * Example: "http://localhost:8085"
