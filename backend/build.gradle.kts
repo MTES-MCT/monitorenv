@@ -113,8 +113,8 @@ dependencies {
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
     // the two following apoche poi dependencies should have the same version
-    implementation("org.apache.poi:poi:5.5.1")
-    implementation("org.apache.poi:poi-ooxml:5.5.1")
+    implementation("org.apache.poi:poi:6.0.0")
+    implementation("org.apache.poi:poi-ooxml:6.0.0")
     // Scalr (image resizer with better quality)
     implementation("org.imgscalr:imgscalr-lib:4.2")
 
