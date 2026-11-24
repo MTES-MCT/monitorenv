@@ -16,10 +16,10 @@ import { RegulatoryAreaGroupFormSchema } from '@features/RegulatoryArea/componen
 import { RegulatoryAreaItem } from '@features/RegulatoryArea/components/RegulatoryAreaList/RegulatoryAreaItem'
 import { regulatoryAreaTableActions } from '@features/RegulatoryArea/components/RegulatoryAreaList/slice'
 import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/RegulatoryAreaPanel'
+import { type RegulatoryAreaGroupFields, usePropagation } from '@features/RegulatoryArea/hooks/usePropagation'
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
-import { usePropagation, type RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Checkbox, FormikTextInput, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
@@ -48,29 +48,6 @@ const mapChildrensComponents = [
   <MapExtentController key="MapExtentController" />
 ]
 
-const DATA_FROM_GROUP: { label: string; value: RegulatoryAreaGroupFields }[] = [
-  {
-    label: 'Thématiques et sous-thématiques',
-    value: 'THEMES'
-  },
-  {
-    label: 'Tags et sous-tags',
-    value: 'TAGS'
-  },
-  {
-    label: 'Résumé',
-    value: 'RESUME'
-  },
-  {
-    label: "Période d'autorisation",
-    value: 'AUTHORIZATION_PERIODS'
-  },
-  {
-    label: "Période d'interdiction",
-    value: 'PROHIBITION_PERIODS'
-  }
-]
-
 export function RegulatoryAreaGroupForm() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -91,7 +68,6 @@ export function RegulatoryAreaGroupForm() {
   )
   const {
     conflicts,
-    hasRegulatoryAreasNotUsingGroupValue,
     isDirty: isPropagationDirty,
     isValid: isPropagationValid,
     needsAnswer,
@@ -118,6 +94,11 @@ export function RegulatoryAreaGroupForm() {
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
+  const [dismissedGroupValueOnlyMessages, setDismissedGroupValueOnlyMessages] = useState<RegulatoryAreaGroupFields[]>(
+    []
+  )
+  const dismissGroupValueOnlyMessage = (field: RegulatoryAreaGroupFields) =>
+    setDismissedGroupValueOnlyMessages(previous => (previous.includes(field) ? previous : [...previous, field]))
 
   const initialValues: RegulatoryArea.RegulatoryAreaGroupToApi = {
     additionalRefReg: regulatoryAreaGroup?.group.additionalRefReg,
@@ -128,6 +109,7 @@ export function RegulatoryAreaGroupForm() {
     layerName: regulatoryAreaGroup?.group.layerName,
     location: regulatoryAreaGroup?.group.location,
     prohibitionPeriods: regulatoryAreaGroup?.group.prohibitionPeriods,
+    propagatedFields: regulatoryAreaGroup?.group.propagatedFields,
     refReg: regulatoryAreaGroup?.group.refReg,
     regulatoryAreaIds: regulatoryAreas.map(({ id }) => id),
     resume: regulatoryAreaGroup?.group.resume,
@@ -293,7 +275,7 @@ export function RegulatoryAreaGroupForm() {
                       onChange={() => {}}
                       readOnly
                     />
-                    {DATA_FROM_GROUP.map(item => (
+                    {RegulatoryArea.DATA_FROM_GROUP.map(item => (
                       <Checkbox
                         key={item.value}
                         checked={propagation[item.value]?.enabled}
@@ -307,7 +289,8 @@ export function RegulatoryAreaGroupForm() {
                 {withIdentification && (
                   <GroupIdentification
                     conflicts={conflicts}
-                    hasRegulatoryAreasNotUsingGroupValue={hasRegulatoryAreasNotUsingGroupValue}
+                    dismissedGroupValueOnlyMessages={dismissedGroupValueOnlyMessages}
+                    dismissGroupValueOnlyMessage={dismissGroupValueOnlyMessage}
                     isNew={isNew}
                     needsAnswer={needsAnswer}
                     propagation={propagation}

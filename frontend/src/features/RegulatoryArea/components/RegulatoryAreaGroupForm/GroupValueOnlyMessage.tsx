@@ -1,12 +1,14 @@
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-/** Displayed when the group value changed while some regulatory areas use their own value */
-export function GroupValueOnlyMessage() {
+export function GroupValueOnlyMessage({ onClose }: { onClose: () => void }) {
   return (
-    <Wrapper role="status">
-      <Icon.Info color={THEME.color.slateGray} />
-      <p>Les modifications impacteront uniquement les réglementations qui utilisent la valeur du groupe.</p>
+    <Wrapper>
+      <p>
+        Les modifications impacteront uniquement les réglementations <Underline>qui utilisent</Underline> la valeur du
+        groupe.
+      </p>
+      <IconButton accent={Accent.TERTIARY} color="#45688a" Icon={Icon.Close} onClick={onClose} title="Fermer" />
     </Wrapper>
   )
 }
@@ -17,6 +19,11 @@ const Wrapper = styled.div`
   border: 1px solid ${p => p.theme.color.blueGray};
   color: #45688a;
   display: flex;
+  font-weight: bold;
   gap: 8px;
+  justify-content: space-between;
   padding: 16px;
+`
+const Underline = styled.span`
+  text-decoration: underline;
 `

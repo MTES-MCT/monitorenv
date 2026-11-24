@@ -32,7 +32,7 @@ Les textes réglementaires (`refReg`, `type`, `url`, `date`, `dateFin`, `additio
 
 ### Héritage logique, stockage dénormalisé
 
-- **Nouvelle colonne `regulatory_areas.inherited_fields text[]`** (migration `V0.240`), utilisée sur les zones : la liste des champs dont la zone utilise la valeur du groupe.
+- **Nouvelle colonne `regulatory_areas.inherited_fields text[]`** (migration `V0.239`), utilisée sur les zones : la liste des champs dont la zone utilise la valeur du groupe.
 - **La valeur du groupe est aussi écrite dans la zone.** Toutes les lectures (tuiles, filtres, tableaux de bord, pipeline) restent donc inchangées.
 - **Le back maintient la copie à jour** :
   - à la sauvegarde du groupe, les zones qui héritent d'un champ reçoivent sa nouvelle valeur ;

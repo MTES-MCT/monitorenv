@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { useGetPropagationConflictsQuery } from '@api/regulatoryAreasAPI'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { isEqual } from 'lodash'
@@ -31,12 +32,8 @@ const toPropagation = (propagatedFields: RegulatoryAreaGroupFields[] = []): Prop
   Object.fromEntries(propagatedFields.map(field => [field, { enabled: true }]))
 
 const getEnabledFields = (propagation: Propagation) =>
-  (Object.keys(propagation) as RegulatoryAreaGroupFields[]).filter(field => propagation[field]?.enabled).sort()
+  (Object.keys(propagation) as RegulatoryAreaGroupFields[]).filter(field => propagation[field]?.enabled)
 
-/**
- * @param regulatoryAreas regulatory areas currently in the group
- * @param savedPropagatedFields fields propagated by the saved group
- */
 export function usePropagation(
   regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[],
   savedPropagatedFields?: RegulatoryAreaGroupFields[]
@@ -49,6 +46,7 @@ export function usePropagation(
   }, [savedPropagatedFields])
 
   const enabledFields = useMemo(() => getEnabledFields(propagation), [propagation])
+
   /** Fields checked on the group but not saved yet: the only ones for which the "overwrite?" question can be asked */
   const newlyEnabledFields = useMemo(
     () => enabledFields.filter(field => !savedPropagatedFields?.includes(field)),
@@ -76,25 +74,14 @@ export function usePropagation(
   const needsAnswer = (field: RegulatoryAreaGroupFields) =>
     newlyEnabledFields.includes(field) && (conflicts[field]?.regulatoryAreasWithExistingData.length ?? 0) > 0
 
-  /** The group can't be saved while a question remains unanswered */
   const isValid = newlyEnabledFields.every(
     field => !needsAnswer(field) || propagation[field]?.overwriteExisting !== undefined
   )
-
-  /**
-   * For a field already propagated by the group: some regulatory areas use their own value,
-   * so a change of the group value won't apply to them.
-   */
-  const hasRegulatoryAreasNotUsingGroupValue = (field: RegulatoryAreaGroupFields) =>
-    !!savedPropagatedFields?.includes(field) &&
-    enabledFields.includes(field) &&
-    regulatoryAreas.some(regulatoryArea => !regulatoryArea.inheritedFields?.includes(field))
 
   const isDirty = !isEqual(enabledFields, getEnabledFields(toPropagation(savedPropagatedFields)))
 
   return {
     conflicts,
-    hasRegulatoryAreasNotUsingGroupValue,
     isDirty,
     isValid,
     needsAnswer,

@@ -1,98 +1,138 @@
-import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
-import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
+import { Tooltip } from '@components/Tooltip'
 import styled from 'styled-components'
 
+import type { RegulatoryAreaGroupFields } from '@features/RegulatoryArea/hooks/usePropagation'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
-import type { RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
 
 type ConflictingRegulatoryAreasProps = {
   field: RegulatoryAreaGroupFields
   regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
+  title: string
 }
 
-/** Lists the current value of the given field for each regulatory area that would be overwritten */
-export function ConflictingRegulatoryAreas({ field, regulatoryAreas }: ConflictingRegulatoryAreasProps) {
+type NamedItem = { id: number; name: string }
+type GroupedItem = NamedItem & { children: NamedItem[] }
+
+export function ConflictingRegulatoryAreas({ field, regulatoryAreas, title }: ConflictingRegulatoryAreasProps) {
   return (
-    <List>
-      {regulatoryAreas.map(regulatoryArea => (
-        <Item key={regulatoryArea.id}>
-          <AreaName>{regulatoryArea.polyName || `Zone ${regulatoryArea.id}`}</AreaName>
-          <FieldValues field={field} regulatoryArea={regulatoryArea} />
-        </Item>
-      ))}
-    </List>
+    <Tooltip
+      linkText={`Voir les ${title.toLowerCase()} ajoutées aux zones réglementaires actuelles`}
+      orientation="BOTTOM_RIGHT"
+    >
+      <FieldValues field={field} regulatoryAreas={regulatoryAreas} />
+    </Tooltip>
   )
 }
 
 function FieldValues({
   field,
-  regulatoryArea
+  regulatoryAreas
 }: {
   field: RegulatoryAreaGroupFields
-  regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
 }) {
   switch (field) {
     case 'THEMES':
       return (
-        <>
-          <Line label="Thématiques" value={displayThemes(regulatoryArea.themes)} />
-          <Line label="Sous-thématiques" value={displaySubThemes(regulatoryArea.themes)} />
-        </>
+        <GroupedList
+          items={mergeUniqueWithChildren(
+            regulatoryAreas.flatMap(({ themes }) =>
+              (themes ?? []).map(theme => ({ ...theme, children: theme.subThemes }))
+            )
+          )}
+        />
       )
     case 'TAGS':
       return (
-        <>
-          <Line label="Tags" value={displayTags(regulatoryArea.tags)} />
-          <Line label="Sous-tags" value={displaySubTags(regulatoryArea.tags)} />
-        </>
+        <GroupedList
+          items={mergeUniqueWithChildren(
+            regulatoryAreas.flatMap(({ tags }) => (tags ?? []).map(tag => ({ ...tag, children: tag.subTags })))
+          )}
+        />
       )
     case 'RESUME':
-      return <Text>{regulatoryArea.resume}</Text>
+      return <TextList values={regulatoryAreas.map(({ id, resume }) => ({ id, value: resume }))} />
     case 'AUTHORIZATION_PERIODS':
-      return <Text>{regulatoryArea.authorizationPeriods}</Text>
+      return (
+        <TextList
+          values={regulatoryAreas.map(({ authorizationPeriods, id }) => ({ id, value: authorizationPeriods }))}
+        />
+      )
     case 'PROHIBITION_PERIODS':
-      return <Text>{regulatoryArea.prohibitionPeriods}</Text>
+      return (
+        <TextList values={regulatoryAreas.map(({ id, prohibitionPeriods }) => ({ id, value: prohibitionPeriods }))} />
+      )
     default:
       return null
   }
 }
 
-function Line({ label, value }: { label: string; value?: string }) {
-  if (!value) {
+/** Merges items (themes or tags) by id, deduplicating their children, sorted by name */
+function mergeUniqueWithChildren(items: GroupedItem[]): GroupedItem[] {
+  const itemsById = new Map<number, { children: Map<number, NamedItem>; id: number; name: string }>()
+
+  items.forEach(({ children, id, name }) => {
+    const existing = itemsById.get(id) ?? { children: new Map<number, NamedItem>(), id, name }
+    children.forEach(child => existing.children.set(child.id, { id: child.id, name: child.name }))
+    itemsById.set(id, existing)
+  })
+
+  return [...itemsById.values()]
+    .map(({ children, id, name }) => ({
+      children: [...children.values()].sort((a, b) => a.name.localeCompare(b.name)),
+      id,
+      name
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function GroupedList({ items }: { items: GroupedItem[] }) {
+  if (items.length === 0) {
     return null
   }
 
   return (
-    <Text>
-      <Label>{label} :</Label> {value}
-    </Text>
+    <List>
+      {items.map(({ children, id, name }) => (
+        <li key={id}>
+          <ItemName>{name}</ItemName>
+          {children.length > 0 && <Text>{children.map(child => child.name).join(', ')}</Text>}
+        </li>
+      ))}
+    </List>
+  )
+}
+
+function TextList({ values }: { values: { id: number; value?: string }[] }) {
+  const filledValues = values.filter(({ value }) => !!value)
+  if (filledValues.length === 0) {
+    return null
+  }
+
+  return (
+    <List>
+      {filledValues.map(({ id, value }) => (
+        <li key={id}>
+          <Text>{value}</Text>
+        </li>
+      ))}
+    </List>
   )
 }
 
 const List = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   list-style: none;
-  margin: 8px 0 0;
+  margin: 0;
   padding: 0;
 `
 
-const Item = styled.li`
-  border-left: 2px solid ${p => p.theme.color.blueGray};
-  padding-left: 8px;
+const ItemName = styled.div`
+  font-weight: 700;
 `
 
-const AreaName = styled.p`
-  color: ${p => p.theme.color.gunMetal};
-  font-weight: 500;
-`
-
-const Text = styled.p`
-  color: ${p => p.theme.color.slateGray};
+const Text = styled.div`
   white-space: pre-wrap;
-`
-
-const Label = styled.span`
-  color: ${p => p.theme.color.gunMetal};
 `

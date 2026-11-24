@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 
-/** Values of a group that its regulatory areas can inherit */
 data class PropagatedValuesEntity(
     val authorizationPeriods: String?,
     val prohibitionPeriods: String?,

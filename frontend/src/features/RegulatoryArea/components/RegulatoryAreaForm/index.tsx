@@ -51,45 +51,56 @@ export function RegulatoryAreaForm() {
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
 
-  const isEditing = !!regulatoryAreaId
+  const isEditing = !!regulatoryAreaId && regulatoryAreaId !== 'new'
   const { currentData: regulatoryArea } = useGetRegulatoryAreaByIdQuery(
-    regulatoryAreaId && regulatoryAreaId !== 'new' ? Number(regulatoryAreaId) : skipToken
+    isEditing ? Number(regulatoryAreaId) : skipToken
   )
 
   const { data: regulatoryAreaGroup } = useGetRegulatoryAreaGroupByIdQuery(
     groupId && !Number.isNaN(+groupId) ? +groupId : skipToken
   )
 
-  const initialValues = useMemo(
-    () =>
-      ({
-        additionalRefReg: regulatoryArea?.additionalRefReg ?? [],
-        authorizationPeriods: regulatoryArea?.authorizationPeriods,
-        creation: regulatoryArea?.creation,
-        date: regulatoryArea?.date ?? customDayjs().toISOString(),
-        dateFin: regulatoryArea?.dateFin,
-        editeur: regulatoryArea?.editeur,
-        editionBo: regulatoryArea?.editionBo,
-        editionCacem: regulatoryArea?.editionCacem,
-        facade: regulatoryArea?.facade,
-        geom: regulatoryArea?.geom,
-        id: regulatoryArea?.id,
-        layerName: regulatoryArea?.layerName ?? regulatoryAreaGroup?.group.layerName,
-        location: regulatoryArea?.location ?? regulatoryAreaGroup?.group.location,
-        observations: regulatoryArea?.observations,
-        plan: regulatoryArea?.plan ?? [],
-        polyName: regulatoryArea?.polyName,
-        prohibitionPeriods: regulatoryArea?.prohibitionPeriods,
-        refReg: regulatoryArea?.refReg,
-        resume: regulatoryArea?.resume,
-        source: regulatoryArea?.source,
-        tags: regulatoryArea?.tags ?? [],
-        themes: regulatoryArea?.themes ?? [],
-        type: regulatoryArea?.type,
-        url: regulatoryArea?.url
-      }) as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea,
-    [regulatoryArea, regulatoryAreaGroup?.group.layerName, regulatoryAreaGroup?.group.location]
-  )
+  const initialValues = useMemo(() => {
+    const group = regulatoryAreaGroup?.group
+    const propagatedFields = group?.propagatedFields ?? []
+    const shouldInherit = (field: (typeof propagatedFields)[number]) => !isEditing && propagatedFields.includes(field)
+
+    const propagatedFieldsFromGroup = {
+      authorizationPeriods: shouldInherit('AUTHORIZATION_PERIODS')
+        ? group?.authorizationPeriods
+        : regulatoryArea?.authorizationPeriods,
+      inheritedFields: !isEditing ? group?.propagatedFields : regulatoryArea?.inheritedFields,
+      prohibitionPeriods: shouldInherit('PROHIBITION_PERIODS')
+        ? group?.prohibitionPeriods
+        : regulatoryArea?.prohibitionPeriods,
+      resume: shouldInherit('RESUME') ? group?.resume : regulatoryArea?.resume,
+      tags: shouldInherit('TAGS') ? group?.tags : regulatoryArea?.tags,
+      themes: shouldInherit('THEMES') ? group?.themes : regulatoryArea?.themes
+    }
+
+    return {
+      additionalRefReg: regulatoryArea?.additionalRefReg ?? [],
+      creation: regulatoryArea?.creation,
+      date: regulatoryArea?.date ?? customDayjs().toISOString(),
+      dateFin: regulatoryArea?.dateFin,
+      editeur: regulatoryArea?.editeur,
+      editionBo: regulatoryArea?.editionBo,
+      editionCacem: regulatoryArea?.editionCacem,
+      facade: regulatoryArea?.facade,
+      geom: regulatoryArea?.geom,
+      id: regulatoryArea?.id,
+      layerName: regulatoryArea?.layerName ?? regulatoryAreaGroup?.group.layerName,
+      location: regulatoryArea?.location ?? regulatoryAreaGroup?.group.location,
+      observations: regulatoryArea?.observations,
+      plan: regulatoryArea?.plan ?? [],
+      polyName: regulatoryArea?.polyName,
+      refReg: regulatoryArea?.refReg,
+      source: regulatoryArea?.source,
+      type: regulatoryArea?.type,
+      url: regulatoryArea?.url,
+      ...propagatedFieldsFromGroup
+    } as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea
+  }, [regulatoryArea, regulatoryAreaGroup, isEditing])
 
   const backToList = () => {
     dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(undefined))

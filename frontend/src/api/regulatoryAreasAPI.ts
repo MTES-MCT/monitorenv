@@ -7,8 +7,8 @@ import { orderBy } from 'lodash'
 
 import { monitorenvPrivateApi } from './api'
 
+import type { PropagationConflicts, RegulatoryAreaGroupFields } from '@features/RegulatoryArea/hooks/usePropagation'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
-import type { PropagationConflicts, RegulatoryAreaGroupFields } from '@features/RegulatoryArea/useCases/usePropagation'
 import type { HomeRootState } from '@store/index'
 
 const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"

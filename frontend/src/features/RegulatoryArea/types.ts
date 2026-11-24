@@ -1,4 +1,4 @@
-import type { Propagation, RegulatoryAreaGroupFields } from './useCases/usePropagation'
+import type { Propagation, RegulatoryAreaGroupFields } from './hooks/usePropagation'
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -18,7 +18,6 @@ export namespace RegulatoryArea {
     geom?: GeoJSON.MultiPolygon
     hasGeomChangedRecently: boolean
     id: number
-    /** Only for regulatory areas: fields whose value comes from the group */
     inheritedFields?: RegulatoryAreaGroupFields[]
     isNew: boolean
     isUpdatedRecently: boolean
@@ -28,8 +27,6 @@ export namespace RegulatoryArea {
     plan: string
     polyName: string
     prohibitionPeriods?: string
-    /** Only for groups: fields applied by default to the regulatory areas of the group */
-    propagatedFields?: RegulatoryAreaGroupFields[]
     refReg?: string
     resume?: string
     source?: string
@@ -72,7 +69,7 @@ export namespace RegulatoryArea {
   }
 
   export type RegulatoryAreaGroup = {
-    group: RegulatoryAreaFromAPI
+    group: RegulatoryAreaGroupFromApi
     regulatoryAreas: RegulatoryAreaFromAPI[]
   }
 
@@ -87,6 +84,10 @@ export namespace RegulatoryArea {
     tags?: string
   }
 
+  export type RegulatoryAreaGroupFromApi = Omit<RegulatoryAreaFromAPI, 'inheritedFields'> & {
+    propagatedFields?: RegulatoryAreaGroupFields[]
+  }
+
   export type RegulatoryAreaGroupToApi = {
     additionalRefReg?: AdditionalRegulatoryText[]
     authorizationPeriods?: string
@@ -98,6 +99,7 @@ export namespace RegulatoryArea {
     layerName?: string
     location?: string
     prohibitionPeriods?: string
+    propagatedFields?: RegulatoryAreaGroupFields[]
     propagation?: Propagation
     refReg?: string
     regulatoryAreaIds?: number[]
@@ -109,7 +111,7 @@ export namespace RegulatoryArea {
   }
 
   export type RegulatoryAreaGroupWithTotal = {
-    group: RegulatoryAreaFromAPI
+    group: RegulatoryAreaGroupFromApi
     total: number
   }
 
@@ -167,4 +169,27 @@ export namespace RegulatoryArea {
     [RegulatoryAreaType.REGIONAL_PREFECT_ORDER]: 'Arrêté du préfet de région',
     [RegulatoryAreaType.REGULATION]: 'Règlement'
   } as const
+
+  export const DATA_FROM_GROUP: { label: string; value: RegulatoryAreaGroupFields }[] = [
+    {
+      label: 'Thématiques et sous-thématiques',
+      value: 'THEMES'
+    },
+    {
+      label: 'Tags et sous-tags',
+      value: 'TAGS'
+    },
+    {
+      label: 'Résumé',
+      value: 'RESUME'
+    },
+    {
+      label: "Période d'autorisation",
+      value: 'AUTHORIZATION_PERIODS'
+    },
+    {
+      label: "Période d'interdiction",
+      value: 'PROHIBITION_PERIODS'
+    }
+  ]
 }

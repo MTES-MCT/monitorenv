@@ -3,13 +3,13 @@ import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Bold } from '@components/style'
 import { GroupValueOnlyMessage } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/GroupValueOnlyMessage'
 import { InformativeMessageForCopyData } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/InformativeMessageForCopyData'
-import { SubTitle } from '@features/RegulatoryArea/style'
 import {
   type Propagation,
   type PropagationConflicts,
   type RegulatoryAreaGroupFields
-} from '@features/RegulatoryArea/useCases/usePropagation'
-import { getChangedPropagatedFields } from '@features/RegulatoryArea/useCases/usePropagation'
+} from '@features/RegulatoryArea/hooks/usePropagation'
+import { getChangedPropagatedFields } from '@features/RegulatoryArea/hooks/usePropagation'
+import { SubTitle } from '@features/RegulatoryArea/style'
 import { FormikTextarea, Icon, Label, SingleTag, THEME } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
@@ -25,7 +25,8 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 type GroupIdentificationProps = {
   conflicts: PropagationConflicts
-  hasRegulatoryAreasNotUsingGroupValue: (field: RegulatoryAreaGroupFields) => boolean
+  dismissGroupValueOnlyMessage: (field: RegulatoryAreaGroupFields) => void
+  dismissedGroupValueOnlyMessages: RegulatoryAreaGroupFields[]
   isNew: boolean
   needsAnswer: (field: RegulatoryAreaGroupFields) => boolean
   propagation: Propagation
@@ -34,7 +35,8 @@ type GroupIdentificationProps = {
 
 export function GroupIdentification({
   conflicts,
-  hasRegulatoryAreasNotUsingGroupValue,
+  dismissedGroupValueOnlyMessages,
+  dismissGroupValueOnlyMessage,
   isNew,
   needsAnswer,
   propagation,
@@ -43,9 +45,16 @@ export function GroupIdentification({
   const { initialValues, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaGroupToApi>()
 
   const changedFields = getChangedPropagatedFields(values, initialValues)
-  const isQuestionDisplayed = (field: RegulatoryAreaGroupFields) => !isNew && needsAnswer(field)
+
+  const isQuestionDisplayed = (field: RegulatoryAreaGroupFields) =>
+    !isNew && needsAnswer(field) && propagation[field]?.overwriteExisting === undefined
+
   const isGroupValueOnlyMessageDisplayed = (field: RegulatoryAreaGroupFields) =>
-    !isNew && changedFields.includes(field) && hasRegulatoryAreasNotUsingGroupValue(field)
+    !isNew &&
+    initialValues.propagatedFields?.includes(field) &&
+    changedFields.includes(field) &&
+    !dismissedGroupValueOnlyMessages.includes(field)
+
   const getConflictingRegulatoryAreas = (field: RegulatoryAreaGroupFields) =>
     conflicts[field]?.regulatoryAreasWithExistingData ?? []
 
@@ -75,7 +84,9 @@ export function GroupIdentification({
   return (
     <>
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
-      {isGroupValueOnlyMessageDisplayed('THEMES') && <GroupValueOnlyMessage />}
+      {isGroupValueOnlyMessageDisplayed('THEMES') && (
+        <GroupValueOnlyMessage onClose={() => dismissGroupValueOnlyMessage('THEMES')} />
+      )}
       {isQuestionDisplayed('THEMES') && (
         <InformativeMessageForCopyData
           field="THEMES"
@@ -84,14 +95,16 @@ export function GroupIdentification({
           regulatoryAreas={getConflictingRegulatoryAreas('THEMES')}
           text={
             <>
-              Les <Bold>thématiques sélectionnés</Bold> doivent-elles modifier les{' '}
+              Les <Bold>thématiques sélectionnées</Bold> doivent-elles modifier les{' '}
               <Bold>thématiques actuellement associées aux réglementations&nbsp;? </Bold>
             </>
           }
           title="Thématiques"
         />
       )}
-      {isGroupValueOnlyMessageDisplayed('TAGS') && <GroupValueOnlyMessage />}
+      {isGroupValueOnlyMessageDisplayed('TAGS') && (
+        <GroupValueOnlyMessage onClose={() => dismissGroupValueOnlyMessage('TAGS')} />
+      )}
       {isQuestionDisplayed('TAGS') && (
         <InformativeMessageForCopyData
           field="TAGS"
@@ -100,7 +113,7 @@ export function GroupIdentification({
           regulatoryAreas={getConflictingRegulatoryAreas('TAGS')}
           text={
             <>
-              Les <Bold>tags sélectionnés</Bold> doivent-elles modifier les{' '}
+              Les <Bold>tags sélectionnés</Bold> doivent-ils modifier les{' '}
               <Bold>tags actuellement associés aux réglementations&nbsp;? </Bold>
             </>
           }
@@ -168,7 +181,9 @@ export function GroupIdentification({
       )}
       {propagation.RESUME?.enabled && (
         <>
-          {isGroupValueOnlyMessageDisplayed('RESUME') && <GroupValueOnlyMessage />}
+          {isGroupValueOnlyMessageDisplayed('RESUME') && (
+            <GroupValueOnlyMessage onClose={() => dismissGroupValueOnlyMessage('RESUME')} />
+          )}
           {isQuestionDisplayed('RESUME') && (
             <InformativeMessageForCopyData
               field="RESUME"
@@ -177,7 +192,7 @@ export function GroupIdentification({
               regulatoryAreas={getConflictingRegulatoryAreas('RESUME')}
               text={
                 <>
-                  Le <Bold>thème sélectionné</Bold> doit-il modifier le{' '}
+                  Le <Bold>résumé sélectionné</Bold> doit-il modifier le{' '}
                   <Bold>résumé actuellement associé aux réglementations&nbsp;? </Bold>
                 </>
               }
@@ -195,7 +210,9 @@ export function GroupIdentification({
       )}
       {withPeriods && (
         <>
-          {isGroupValueOnlyMessageDisplayed('AUTHORIZATION_PERIODS') && <GroupValueOnlyMessage />}
+          {isGroupValueOnlyMessageDisplayed('AUTHORIZATION_PERIODS') && (
+            <GroupValueOnlyMessage onClose={() => dismissGroupValueOnlyMessage('AUTHORIZATION_PERIODS')} />
+          )}
           {isQuestionDisplayed('AUTHORIZATION_PERIODS') && (
             <InformativeMessageForCopyData
               field="AUTHORIZATION_PERIODS"
@@ -211,7 +228,9 @@ export function GroupIdentification({
               title="Période d'autorisation"
             />
           )}
-          {isGroupValueOnlyMessageDisplayed('PROHIBITION_PERIODS') && <GroupValueOnlyMessage />}
+          {isGroupValueOnlyMessageDisplayed('PROHIBITION_PERIODS') && (
+            <GroupValueOnlyMessage onClose={() => dismissGroupValueOnlyMessage('PROHIBITION_PERIODS')} />
+          )}
           {isQuestionDisplayed('PROHIBITION_PERIODS') && (
             <InformativeMessageForCopyData
               field="PROHIBITION_PERIODS"
@@ -228,34 +247,38 @@ export function GroupIdentification({
             />
           )}
           <PeriodContainer>
-            <Period>
-              <Label>
-                <StyledIcon color={THEME.color.mediumSeaGreen} size={10} />
-                Période d&apos;autorisation
-              </Label>
-              <FormikTextarea
-                isErrorMessageHidden
-                isLabelHidden
-                isRequired
-                label="Période d'autorisation"
-                name="authorizationPeriods"
-                placeholder="Détail de la période d’autorisation"
-              />
-            </Period>
-            <Period>
-              <Label>
-                <StyledIcon color={THEME.color.maximumRed} size={10} />
-                Période d&apos;interdiction
-              </Label>
-              <FormikTextarea
-                isErrorMessageHidden
-                isLabelHidden
-                isRequired
-                label="Période d'interdiction"
-                name="prohibitionPeriods"
-                placeholder="Détail de la période d’interdiction"
-              />
-            </Period>
+            {propagation.AUTHORIZATION_PERIODS?.enabled && (
+              <Period>
+                <Label>
+                  <StyledIcon color={THEME.color.mediumSeaGreen} size={10} />
+                  Période d&apos;autorisation
+                </Label>
+                <FormikTextarea
+                  isErrorMessageHidden
+                  isLabelHidden
+                  isRequired
+                  label="Période d'autorisation"
+                  name="authorizationPeriods"
+                  placeholder="Détail de la période d’autorisation"
+                />
+              </Period>
+            )}
+            {propagation.PROHIBITION_PERIODS?.enabled && (
+              <Period>
+                <Label>
+                  <StyledIcon color={THEME.color.maximumRed} size={10} />
+                  Période d&apos;interdiction
+                </Label>
+                <FormikTextarea
+                  isErrorMessageHidden
+                  isLabelHidden
+                  isRequired
+                  label="Période d'interdiction"
+                  name="prohibitionPeriods"
+                  placeholder="Détail de la période d’interdiction"
+                />
+              </Period>
+            )}
           </PeriodContainer>
         </>
       )}
