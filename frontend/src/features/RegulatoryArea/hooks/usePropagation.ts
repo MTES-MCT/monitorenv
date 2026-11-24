@@ -10,13 +10,11 @@ export type RegulatoryAreaGroupFields = 'THEMES' | 'TAGS' | 'RESUME' | 'AUTHORIZ
 export type PropagationOption = { enabled: boolean; overwriteExisting?: boolean }
 export type Propagation = Partial<Record<RegulatoryAreaGroupFields, PropagationOption>>
 export type PropagationConflict = {
-  /** Regulatory areas whose current value would be overwritten by the group value */
   regulatoryAreasWithExistingData: RegulatoryArea.RegulatoryAreaFromAPI[]
   totalRegulatoryAreas: number
 }
 export type PropagationConflicts = Partial<Record<RegulatoryAreaGroupFields, PropagationConflict>>
 
-/** Form value holding the group value of each propagated field */
 export const PROPAGATED_FIELD_TO_FORM_KEY: Record<
   RegulatoryAreaGroupFields,
   keyof RegulatoryArea.RegulatoryAreaGroupToApi

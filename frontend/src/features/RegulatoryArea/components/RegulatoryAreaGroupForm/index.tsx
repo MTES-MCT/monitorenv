@@ -16,7 +16,11 @@ import { RegulatoryAreaGroupFormSchema } from '@features/RegulatoryArea/componen
 import { RegulatoryAreaItem } from '@features/RegulatoryArea/components/RegulatoryAreaList/RegulatoryAreaItem'
 import { regulatoryAreaTableActions } from '@features/RegulatoryArea/components/RegulatoryAreaList/slice'
 import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/RegulatoryAreaPanel'
-import { type RegulatoryAreaGroupFields, usePropagation } from '@features/RegulatoryArea/hooks/usePropagation'
+import {
+  PROPAGATED_FIELD_TO_FORM_KEY,
+  type RegulatoryAreaGroupFields,
+  usePropagation
+} from '@features/RegulatoryArea/hooks/usePropagation'
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
@@ -199,7 +203,7 @@ export function RegulatoryAreaGroupForm() {
         validateOnChange={false}
         validationSchema={RegulatoryAreaGroupFormSchema}
       >
-        {({ dirty, handleSubmit, values }) => (
+        {({ dirty, handleSubmit, setFieldValue, values }) => (
           <RegulatoryWrapper>
             <header>
               <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
@@ -281,7 +285,12 @@ export function RegulatoryAreaGroupForm() {
                         checked={propagation[item.value]?.enabled}
                         label={item.label}
                         name={item.value}
-                        onChange={() => toggle(item.value, !propagation[item.value]?.enabled)}
+                        onChange={isChecked => {
+                          toggle(item.value, !!isChecked)
+                          if (!isChecked) {
+                            setFieldValue(PROPAGATED_FIELD_TO_FORM_KEY[item.value], undefined)
+                          }
+                        }}
                       />
                     ))}
                   </CommonPropertiesWrapper>

@@ -62,6 +62,7 @@ export function GroupIdentification({
     () => values?.themes?.flatMap(theme => [...theme.subThemes, theme]),
     [values?.themes]
   )
+
   const allTagsAndSubtags = useMemo(() => values?.tags?.flatMap(tag => [...tag.subTags, tag]), [values?.tags])
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {

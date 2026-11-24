@@ -5,7 +5,7 @@ import type { TagOption } from 'domain/entities/tags'
 export function deleteTagTag(filter: TagOption[], valueToDelete: TagOption) {
   let updatedFilter: TagOption[] = [...filter]
 
-  if (valueToDelete.subTags) {
+  if (valueToDelete.subTags && valueToDelete.subTags.length > 0) {
     updatedFilter = filter.filter(tag => tag.id !== valueToDelete.id)
   } else {
     updatedFilter = filter
