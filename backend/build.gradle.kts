@@ -57,7 +57,7 @@ tasks.withType<KotlinCompile> {
 val ktorVersion = "3.4.3"
 val testcontainersVersion = "1.21.4"
 val sentryVersion = "8.58.0"
-val flywayVersion = "12.5.0"
+val flywayVersion = "13.11.1"
 
 dependencies {
     implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
