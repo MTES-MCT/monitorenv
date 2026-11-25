@@ -31,6 +31,7 @@ from src.flows.fao_areas import fao_areas_flow
 from src.flows.historic_control_units import historic_control_units_flow
 from src.flows.historic_controls import historic_controls_flow
 from src.flows.infractions import infractions_flow
+from src.flows.legicem_checkup import legicem_checkup_flow
 from src.flows.localized_areas import localized_areas_flow
 from src.flows.marpol import marpol_flow
 from src.flows.refresh_materialized_view import refresh_materialized_view_flow
@@ -41,6 +42,7 @@ from src.flows.update_cacem_regulatory_areas import update_cacem_regulatory_area
 from src.flows.remove_broken_missions_resources_links import (
     remove_broken_missions_resources_links_flow,
 )
+from src.flows.scrape_legicem import scrape_legicem_flow
 from src.flows.semaphores import semaphores_flow
 from src.flows.themes_natinfs import natinfs_themes_flow
 from src.flows.three_hundred_meters_areas import three_hunder_meters_areas_flow
@@ -128,6 +130,26 @@ flows_to_deploy = [
         schedules=[Schedule(cron="6,16,26,36,46,56 * * * *")],
     ),
     FlowAndSchedules(flow=remove_broken_missions_resources_links_flow),
+    FlowAndSchedules(
+        flow=scrape_legicem_flow,
+        schedules=[
+            Schedule(
+                cron="15 5 * * *",
+                timezone="Europe/Paris",
+                parameters={"is_integration": IS_INTEGRATION},
+            )
+        ],
+    ),
+    FlowAndSchedules(
+        flow=legicem_checkup_flow,
+        schedules=[
+            Schedule(
+                cron="5 6 * * *",
+                timezone="Europe/Paris",
+                parameters={"is_integration": IS_INTEGRATION},
+            )
+        ],
+    ),
     FlowAndSchedules(
         flow=semaphores_flow,
         schedules=[Schedule(cron="3 5,15 * * *")],
