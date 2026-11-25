@@ -138,7 +138,7 @@ export function ReportingCard({
     if (!isSuperUser) {
       trackEvent({
         action: 'Consultation Signalement',
-        category: 'MONITOR_EXT',
+        category: 'HORS_CENTRE',
         name: 'Consultation Signalement'
       })
     }

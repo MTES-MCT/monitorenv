@@ -21,13 +21,13 @@ export function RegulatorySummary({ regulatoryReference, type, url }: Regulatory
     if (type === 'AMP') {
       trackEvent({
         action: 'Redirection lien Légicem',
-        category: 'COUCHES CARTO – AMP',
+        category: 'HORS_CENTRE',
         name: 'Lien Légicem depuis AMP'
       })
     } else if (type === 'REGULATORY') {
       trackEvent({
         action: 'Redirection lien Légicem',
-        category: 'COUCHES CARTO – ZONES REG',
+        category: 'HORS_CENTRE',
         name: 'Lien Légicem depuis Zone réglementaire'
       })
     }

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 /* eslint-disable no-underscore-dangle */
-export function useMatomo() {
+export function useMatomo(userId: string) {
   const matomoUrl = import.meta.env.FRONTEND_MATOMO_URL
   const matomoSiteId = import.meta.env.FRONTEND_MATOMO_ID
   const isMatomoActivated = matomoUrl && matomoSiteId
@@ -23,6 +23,7 @@ export function useMatomo() {
     window._paq.push(['enableLinkTracking'])
     window._paq.push(['setTrackerUrl', `${normalizedMatomoUrl}matomo.php`])
     window._paq.push(['setSiteId', matomoSiteId])
+    window._paq.push(['setUserId', userId])
 
     const doc = document
     const scriptElement = doc.createElement('script')
@@ -36,7 +37,7 @@ export function useMatomo() {
     if (scripts?.parentNode) {
       scripts.parentNode.insertBefore(scriptElement, scripts)
     }
-  }, [matomoSiteId, matomoUrl, isMatomoActivated])
+  }, [matomoSiteId, matomoUrl, isMatomoActivated, userId])
 
   return null
 }

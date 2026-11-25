@@ -1,15 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.authorization.UserAuthorization
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import java.util.*
 
 @Entity
 @Table(name = "user_authorizations")
 data class UserAuthorizationModel(
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
     @Column(name = "hashed_email", nullable = false)
     val hashedEmail: String,
     @Column(name = "is_super_user", nullable = false)
@@ -17,15 +16,8 @@ data class UserAuthorizationModel(
 ) {
     fun toUserAuthorization() =
         UserAuthorization(
+            id = id,
             hashedEmail = hashedEmail,
             isSuperUser = isSuperUser,
         )
-
-    companion object {
-        fun fromUserAuthorization(user: UserAuthorization) =
-            UserAuthorizationModel(
-                hashedEmail = user.hashedEmail,
-                isSuperUser = user.isSuperUser,
-            )
-    }
 }

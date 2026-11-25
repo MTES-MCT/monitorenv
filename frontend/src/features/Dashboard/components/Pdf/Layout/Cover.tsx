@@ -65,8 +65,6 @@ const styles = StyleSheet.create({
 export function Cover({ brief }: { brief: Dashboard.Brief }) {
   const legicemId = import.meta.env.MONITORENV_LEGICEM_ID
   const legicemPassword = import.meta.env.MONITORENV_LEGICEM_PASSWORD
-  const monitorEnvExtId = import.meta.env.MONITORENV_EXT_ID
-  const monitorEnvExtPassword = import.meta.env.MONITORENV_EXT_PASSWORD
 
   return (
     <>
@@ -154,15 +152,9 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Monitor Ext</Text>
               </View>
               <View style={[styles.detailsExternal]}>
-                <Link href="https://monitorenv.din.developpement-durable.gouv.fr/ext" style={layoutStyle.link}>
-                  https://monitorenv.din.developpement-durable.gouv.fr/ext
+                <Link href="https://monitorenv.din.developpement-durable.gouv.fr" style={layoutStyle.link}>
+                  https://monitorenv.din.developpement-durable.gouv.fr
                 </Link>
-                <Text style={{ fontWeight: 'medium' }}>
-                  ID <Text style={{ fontWeight: 'normal' }}> : {monitorEnvExtId}</Text>
-                </Text>
-                <Text style={{ fontWeight: 'medium' }}>
-                  Mot de passe <Text style={{ fontWeight: 'normal' }}> : {monitorEnvExtPassword}</Text>
-                </Text>
               </View>
             </View>
           </View>

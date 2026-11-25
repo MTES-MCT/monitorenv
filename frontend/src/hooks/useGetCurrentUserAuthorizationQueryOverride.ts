@@ -14,10 +14,10 @@ export const useGetCurrentUserAuthorizationQueryOverride = () => {
   if (!isOidcEnabled) {
     const normalizedPath = location.pathname.replace(/\/$/, '')
     if (normalizedPath === paths.ext) {
-      return { data: { isSuperUser: false } }
+      return { data: { id: 'UNKNOWN', isSuperUser: false } }
     }
 
-    return { data: { isSuperUser: true } }
+    return { data: { id: 'UNKNOWN', isSuperUser: true } }
   }
 
   return {

@@ -14,7 +14,7 @@ class ImportUsersUTest {
     @Test
     fun `execute should parse userImportFile to UserAuthorization then save them`() {
         // Given
-        val users = listOf(UserAuthorization("email@email.com", true))
+        val users = listOf(UserAuthorization(null, "email@email.com", true))
 
         // When
         val userAuthorizations = importUsers.execute(users)

@@ -37,7 +37,7 @@ export function OverlayContent({
     if (!isSuperUser) {
       trackEvent({
         action: 'Consultation contrôle Récent',
-        category: 'MONITOR_EXT',
+        category: 'HORS_CENTRE',
         name: 'Consultation contrôle Récent'
       })
     }

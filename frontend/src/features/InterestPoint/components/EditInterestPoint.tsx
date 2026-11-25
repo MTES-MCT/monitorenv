@@ -8,15 +8,15 @@ import {
   Accent,
   Button,
   CoordinatesFormat,
+  CoordinatesInput,
+  getCoordinates,
   Icon,
   MapMenuDialog,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION,
-  TextInput,
-  Textarea,
-  getCoordinates,
   MultiRadio,
-  CoordinatesInput
+  OPENLAYERS_PROJECTION,
+  Textarea,
+  TextInput,
+  WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
 import { globalActions, ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
 import { setCoordinatesFormat, setFitToExtent } from 'domain/shared_slices/Map'
@@ -123,7 +123,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     if (!isSuperUser) {
       trackEvent({
         action: "Création d'un point d'intérêt",
-        category: 'MONITOR_EXT',
+        category: 'HORS_CENTRE',
         name: "Création d'un point d'intérêt"
       })
     }

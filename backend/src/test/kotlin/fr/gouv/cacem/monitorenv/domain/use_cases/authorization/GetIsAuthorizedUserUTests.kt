@@ -13,6 +13,7 @@ import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.UUID.randomUUID
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -24,9 +25,10 @@ class GetIsAuthorizedUserUTests {
     fun `execute Should return true When the user is found and super-user When the path is super-user protected`(
         log: CapturedOutput,
     ) {
+        val id = randomUUID()
         given(userAuthorizationRepository.findByHashedEmail(any()))
             .willReturn(
-                UserAuthorization("58GE5S8VXE871FGGd2", true),
+                UserAuthorization(id, "58GE5S8VXE871FGGd2", true),
             )
 
         // When
@@ -46,9 +48,11 @@ class GetIsAuthorizedUserUTests {
 
     @Test
     fun `execute Should return false When the user is found but not super-user When the path is super-user protected`() {
+        val id = randomUUID()
+
         given(userAuthorizationRepository.findByHashedEmail(any()))
             .willReturn(
-                UserAuthorization("58GE5S8VXE871FGGd2", false),
+                UserAuthorization(id, "58GE5S8VXE871FGGd2", false),
             )
 
         // When

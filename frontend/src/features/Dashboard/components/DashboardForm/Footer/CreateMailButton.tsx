@@ -60,7 +60,7 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
     await downloadPdf(brief)
     trackEvent({
       action: 'Partage du brief',
-      category: 'TABLEAU DE BORD & BRIEF',
+      category: 'CENTRE',
       name: 'Partage par mail et téléchargement du brief'
     })
   }
