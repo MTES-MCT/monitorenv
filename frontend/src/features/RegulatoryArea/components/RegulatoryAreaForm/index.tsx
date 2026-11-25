@@ -74,8 +74,8 @@ export function RegulatoryAreaForm() {
         ? group?.prohibitionPeriods
         : regulatoryArea?.prohibitionPeriods,
       resume: shouldInherit('RESUME') ? group?.resume : regulatoryArea?.resume,
-      tags: shouldInherit('TAGS') ? group?.tags : regulatoryArea?.tags,
-      themes: shouldInherit('THEMES') ? group?.themes : regulatoryArea?.themes
+      tags: (shouldInherit('TAGS') ? group?.tags : regulatoryArea?.tags) ?? [],
+      themes: (shouldInherit('THEMES') ? group?.themes : regulatoryArea?.themes) ?? []
     }
 
     return {

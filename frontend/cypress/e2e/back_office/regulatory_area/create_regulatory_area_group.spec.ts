@@ -6,6 +6,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
     cy.visit('/backoffice/regulatory_areas')
     cy.wait('@getRegulatoryAreas')
   })
+
   it('should create a regulatory Area Group', () => {
     cy.clickButton('Créer un groupe de reg.')
     cy.intercept('PUT', '/bff/v1/regulatory-areas/groups').as('createRegulatoryAreaGroup')
@@ -25,6 +26,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
       cy.contains('button', 'Ajouter une réglementation').should('not.be.disabled')
     })
   })
+
   it('should navigate to regulatory area group from regulatory area form', () => {
     cy.intercept('GET', `bff/v1/regulatory-areas/*`).as('getRegulatoryArea')
     cy.clickButton('Saisir une nouvelle réglementation')
@@ -32,6 +34,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
     cy.clickButton('Ajouter un nouveau groupe')
     cy.url().should('include', `/regulatory_area_group/new`)
   })
+
   it('should warn when a regulatory Area Group has duplicates type, location or ref reg url', () => {
     cy.clickButton('Créer un groupe de reg.')
     cy.intercept('PUT', '/bff/v1/regulatory-areas/groups').as('createRegulatoryAreaGroup')
