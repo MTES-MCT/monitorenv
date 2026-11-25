@@ -3,7 +3,6 @@ import { RequireAuth } from '@components/Auth/RequireAuth'
 import { CustomGlobalStyle } from '@components/CustomGlobalStyle'
 import { ErrorBoundary } from '@components/ErrorBoundary'
 import { SideWindow } from '@features/SideWindow'
-import { useMatomo } from '@hooks/useMatomo'
 import { GlobalStyle, THEME, ThemeProvider } from '@mtes-mct/monitor-ui'
 import { BackOfficePage } from '@pages/BackOfficePage'
 import { HomePage } from '@pages/HomePage'
@@ -27,7 +26,6 @@ import frFR from 'rsuite/locales/fr_FR'
 countries.registerLocale(COUNTRIES_FR)
 
 export function App() {
-  useMatomo()
   if (!isBrowserSupported()) {
     return <AlertUnsupportedBrowser />
   }

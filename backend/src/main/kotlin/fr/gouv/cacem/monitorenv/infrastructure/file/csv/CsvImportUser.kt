@@ -40,7 +40,7 @@ class CsvImportUser : ICsvImportUser {
                 }
                 try {
                     val userAuthorisation =
-                        UserAuthorization(hashedEmail = hash(mail), isSuperUser = isSuperUser)
+                        UserAuthorization(id = null, hashedEmail = hash(mail), isSuperUser = isSuperUser)
                     userAuthorisations.add(userAuthorisation)
                 } catch (e: Exception) {
                     logger.error("Error while attempting to parse user import file", e)

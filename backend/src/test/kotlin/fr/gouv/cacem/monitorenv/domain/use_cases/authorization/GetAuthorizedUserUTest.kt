@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
+import java.util.UUID
 
 @ExtendWith(OutputCaptureExtension::class)
 class GetAuthorizedUserUTest {
@@ -21,11 +22,13 @@ class GetAuthorizedUserUTest {
     @Test
     fun `execute should return authorized user`(log: CapturedOutput) {
         // Given
+        val id = UUID.randomUUID()
         val email = "test@test.com"
         val hashedEmail = hash(email)
         val isSuperUser = true
         given(userAuthorizationRepository.findByHashedEmail(hashedEmail)).willReturn(
             UserAuthorization(
+                id = id,
                 hashedEmail,
                 isSuperUser,
             ),

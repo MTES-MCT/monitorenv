@@ -2,6 +2,7 @@ import { PageWrapper } from '@components/style'
 import { accountActions } from '@features/Account/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
+import { useMatomo } from '@hooks/useMatomo'
 import { useEffect } from 'react'
 import { Navigate } from 'react-router'
 
@@ -11,6 +12,7 @@ import { LoadingSpinnerWall } from '../../ui/LoadingSpinnerWall'
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
   const dispatch = useAppDispatch()
   const { data: user, isLoading } = useGetCurrentUserAuthorizationQueryOverride()
+  useMatomo(user?.id ?? 'UNKNOWN USER')
 
   useEffect(() => {
     dispatch(accountActions.setIsSuperUser(user?.isSuperUser))

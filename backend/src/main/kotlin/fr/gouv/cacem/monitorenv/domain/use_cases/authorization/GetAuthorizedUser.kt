@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.hash
 import fr.gouv.cacem.monitorenv.domain.repositories.IUserAuthorizationRepository
 import org.slf4j.LoggerFactory
+import java.util.*
 
 @UseCase
 class GetAuthorizedUser(
@@ -18,6 +19,7 @@ class GetAuthorizedUser(
         if (email == null) {
             logger.info("⚠ No email provided (OIDC disabled), defaulting to super-user=true")
             return AuthorizedUser(
+                id = UUID.randomUUID(),
                 email = null,
                 isSuperUser = true,
             )
@@ -32,6 +34,7 @@ class GetAuthorizedUser(
         }
         logger.info("Found user $hashedEmail")
         return AuthorizedUser(
+            id = userEntity.id,
             email = email,
             isSuperUser = userEntity.isSuperUser,
         )

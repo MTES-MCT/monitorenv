@@ -21,7 +21,7 @@ class SaveUserUTest {
         // Given
         val email = hash("test@test.com")
         val isSuperUser = false
-        val userAuthorization = UserAuthorization(email, isSuperUser)
+        val userAuthorization = UserAuthorization(null, email, isSuperUser)
 
         // When
         saveUser.execute(userAuthorization)

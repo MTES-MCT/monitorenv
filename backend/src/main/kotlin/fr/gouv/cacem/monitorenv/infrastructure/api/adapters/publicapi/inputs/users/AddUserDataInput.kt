@@ -9,6 +9,7 @@ data class AddUserDataInput(
 ) {
     fun toUserAuthorization(): UserAuthorization =
         UserAuthorization(
+            id = null,
             hashedEmail = hash(email),
             isSuperUser = isSuperUser,
         )

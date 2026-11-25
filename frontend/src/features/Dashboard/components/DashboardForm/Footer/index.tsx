@@ -107,8 +107,8 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
     const brief = await generateBrief()
     await downloadPdf(brief)
     trackEvent({
-      action: 'Téléchargement du brief',
-      category: 'TABLEAU DE BORD & BRIEF',
+      action: 'Téléchargement du brief au format pdf',
+      category: 'CENTRE',
       name: 'Téléchargement du brief'
     })
   }
@@ -117,8 +117,8 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
     const brief = await generateBrief({ isLight: true })
     await downloadPdf(brief, true)
     trackEvent({
-      action: 'Téléchargement du brief',
-      category: 'TABLEAU DE BORD & BRIEF',
+      action: 'Téléchargement du brief au format pdf allégé',
+      category: 'CENTRE',
       name: 'Téléchargement du brief'
     })
   }

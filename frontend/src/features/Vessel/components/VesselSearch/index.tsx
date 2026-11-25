@@ -40,7 +40,7 @@ export function SearchVessel({
     if (!debouncedQuery) {
       trackEvent({
         action: 'Recherche',
-        category: 'NAVIRE',
+        category: 'CENTRE',
         name: 'Rechercher un navire'
       })
     }
