@@ -1,3 +1,4 @@
+import type { Propagation, RegulatoryAreaGroupFields } from './hooks/usePropagation'
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -17,6 +18,7 @@ export namespace RegulatoryArea {
     geom?: GeoJSON.MultiPolygon
     hasGeomChangedRecently: boolean
     id: number
+    inheritedFields?: RegulatoryAreaGroupFields[]
     isNew: boolean
     isUpdatedRecently: boolean
     layerName: string
@@ -67,7 +69,7 @@ export namespace RegulatoryArea {
   }
 
   export type RegulatoryAreaGroup = {
-    group: RegulatoryAreaFromAPI
+    group: RegulatoryAreaGroupFromApi
     regulatoryAreas: RegulatoryAreaFromAPI[]
   }
 
@@ -82,21 +84,34 @@ export namespace RegulatoryArea {
     tags?: string
   }
 
+  export type RegulatoryAreaGroupFromApi = Omit<RegulatoryAreaFromAPI, 'inheritedFields'> & {
+    propagatedFields?: RegulatoryAreaGroupFields[]
+  }
+
   export type RegulatoryAreaGroupToApi = {
     additionalRefReg?: AdditionalRegulatoryText[]
+    authorizationPeriods?: string
     date?: string
     dateFin?: string
+    facade?: string
+    geom?: GeoJSON.MultiPolygon
     id?: number
     layerName?: string
     location?: string
+    prohibitionPeriods?: string
+    propagatedFields?: RegulatoryAreaGroupFields[]
+    propagation?: Propagation
     refReg?: string
     regulatoryAreaIds?: number[]
+    resume?: string
+    tags?: TagFromAPI[]
+    themes?: ThemeFromAPI[]
     type?: string
     url?: string
   }
 
   export type RegulatoryAreaGroupWithTotal = {
-    group: RegulatoryAreaFromAPI
+    group: RegulatoryAreaGroupFromApi
     total: number
   }
 
@@ -154,4 +169,27 @@ export namespace RegulatoryArea {
     [RegulatoryAreaType.REGIONAL_PREFECT_ORDER]: 'Arrêté du préfet de région',
     [RegulatoryAreaType.REGULATION]: 'Règlement'
   } as const
+
+  export const DATA_FROM_GROUP: { label: string; value: RegulatoryAreaGroupFields }[] = [
+    {
+      label: 'Thématiques et sous-thématiques',
+      value: 'THEMES'
+    },
+    {
+      label: 'Tags et sous-tags',
+      value: 'TAGS'
+    },
+    {
+      label: 'Résumé',
+      value: 'RESUME'
+    },
+    {
+      label: "Période d'autorisation",
+      value: 'AUTHORIZATION_PERIODS'
+    },
+    {
+      label: "Période d'interdiction",
+      value: 'PROHIBITION_PERIODS'
+    }
+  ]
 }

@@ -1,6 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum.PROHIBITION_PERIODS
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum.RESUME
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum.TAGS
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum.THEMES
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagationOptionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaGroupEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -144,5 +152,69 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
             "ZMEL - Cale Querlen",
             "ZMEL - maison blanche",
         )
+    }
+
+    @Test
+    @Transactional
+    fun `save should save the group values and the given regulatory areas`() {
+        // Given
+        val existingGroup = requireNotNull(jpaRegulatoryAreaGroupRepository.findGroupByRegulatoryAreaId(17))
+        val previousAreas = requireNotNull(jpaRegulatoryAreaGroupRepository.findGroupById(existingGroup.id)).areas
+        val regulatoryAreaIds = previousAreas.map { it.id }
+        val group =
+            RegulatoryAreaGroupEntity(
+                id = existingGroup.id,
+                layerName = existingGroup.layerName,
+                location = existingGroup.location,
+                date = null,
+                dateFin = null,
+                refReg = existingGroup.refReg,
+                type = null,
+                url = null,
+                regulatoryAreaIds = regulatoryAreaIds,
+                themes = listOf(aTheme(id = 9)),
+                tags = listOf(aTag(id = 1)),
+                resume = "Résumé du groupe",
+                prohibitionPeriods = "Interdit l'hiver",
+                propagation =
+                    mapOf(
+                        THEMES to PropagationOptionEntity(enabled = true, overwriteExisting = true),
+                        RESUME to PropagationOptionEntity(enabled = true),
+                        PROHIBITION_PERIODS to PropagationOptionEntity(enabled = true, overwriteExisting = false),
+                        TAGS to PropagationOptionEntity(enabled = false),
+                    ),
+            )
+        val areaToUpdate =
+            previousAreas.first { it.id == 17 }.let {
+                it.copy(
+                    themes = listOf(aTheme(id = 9)),
+                    resume = "Résumé du groupe",
+                    inheritedFields = listOf(THEMES, RESUME),
+                )
+            }
+
+        // When
+        val savedGroup = jpaRegulatoryAreaGroupRepository.save(group, listOf(areaToUpdate))
+
+        // Then
+        assertThat(savedGroup.group.resume).isEqualTo("Résumé du groupe")
+        assertThat(savedGroup.group.prohibitionPeriods).isEqualTo("Interdit l'hiver")
+        assertThat(savedGroup.group.themes.map { it.id }).containsExactly(9)
+        assertThat(savedGroup.group.tags.map { it.id }).containsExactly(1)
+        assertThat(savedGroup.group.propagatedFields).containsExactly(THEMES, RESUME, PROHIBITION_PERIODS)
+
+        assertThat(savedGroup.areas.map { it.id }).containsExactlyInAnyOrderElementsOf(regulatoryAreaIds)
+        val updatedArea = savedGroup.areas.first { it.id == 17 }
+        assertThat(updatedArea.themes.map { it.id }).containsExactly(9)
+        assertThat(updatedArea.resume).isEqualTo("Résumé du groupe")
+        assertThat(updatedArea.inheritedFields).containsExactly(THEMES, RESUME)
+        assertThat(updatedArea.tags).isEqualTo(previousAreas.first { it.id == 17 }.tags)
+        // The other regulatory areas are not changed
+        savedGroup.areas.filter { it.id != 17 }.forEach { area ->
+            val previousArea = previousAreas.first { it.id == area.id }
+            assertThat(area.themes).isEqualTo(previousArea.themes)
+            assertThat(area.resume).isEqualTo(previousArea.resume)
+            assertThat(area.inheritedFields).isEmpty()
+        }
     }
 }

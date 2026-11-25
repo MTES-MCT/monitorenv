@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
@@ -19,6 +20,7 @@ data class RegulatoryAreaDataOutput(
     val facade: String? = null,
     val extent: DoubleArray? = null,
     val geom: MultiPolygon? = null,
+    val inheritedFields: List<PropagatedFieldEnum> = listOf(),
     val isNew: Boolean = false,
     val isUpdatedRecently: Boolean = false,
     val hasGeomChangedRecently: Boolean = false,
@@ -29,6 +31,7 @@ data class RegulatoryAreaDataOutput(
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
+    val propagatedFields: List<PropagatedFieldEnum> = listOf(),
     val refReg: String? = null,
     val resume: String? = null,
     val source: String? = null,
@@ -52,6 +55,7 @@ data class RegulatoryAreaDataOutput(
             extent = regulatoryArea.extent,
             facade = regulatoryArea.facade,
             geom = if (withGeom) regulatoryArea.geom else null,
+            inheritedFields = regulatoryArea.inheritedFields,
             hasGeomChangedRecently = regulatoryArea.hasGeomChangedRecently(),
             isNew = regulatoryArea.isNew(),
             isUpdatedRecently = regulatoryArea.isRecentlyUpdated(),
@@ -70,6 +74,7 @@ data class RegulatoryAreaDataOutput(
             additionalRefReg = regulatoryArea.additionalRefReg,
             authorizationPeriods = regulatoryArea.authorizationPeriods,
             prohibitionPeriods = regulatoryArea.prohibitionPeriods,
+            propagatedFields = regulatoryArea.propagatedFields,
         )
     }
 }

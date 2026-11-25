@@ -6,6 +6,7 @@ import { useMemo, type CSSProperties } from 'react'
 import type { ThemeFromAPI, ThemeOption } from '../domain/entities/themes'
 
 export function RegulatoryThemesFilter({
+  className,
   error = undefined,
   isErrorMessageHidden = false,
   isLabelHidden = true,
@@ -14,9 +15,12 @@ export function RegulatoryThemesFilter({
   label,
   onChange,
   popupStyle,
+  readOnly = false,
+  shouldShowLabels = false,
   style,
   value
 }: {
+  className?: string
   error?: string
   isErrorMessageHidden?: boolean
   isLabelHidden?: boolean
@@ -25,6 +29,8 @@ export function RegulatoryThemesFilter({
   label?: string
   onChange: (nextThemes: ThemeOption[] | ThemeFromAPI[] | undefined) => void
   popupStyle?: CSSProperties
+  readOnly?: boolean
+  shouldShowLabels?: boolean
   style?: CSSProperties
   value: ThemeOption[] | ThemeFromAPI[]
 }) {
@@ -36,6 +42,7 @@ export function RegulatoryThemesFilter({
     <CheckTreePicker
       key={`regulatory-themes-${themesOptions.length}`}
       childrenKey="subThemes"
+      className={className}
       error={error}
       isErrorMessageHidden={isErrorMessageHidden}
       isLabelHidden={isLabelHidden}
@@ -48,9 +55,10 @@ export function RegulatoryThemesFilter({
       options={themesOptions}
       placeholder="Thématiques et sous-thématiques"
       popupStyle={popupStyle}
+      readOnly={readOnly}
       renderedChildrenValue="Sous-thém."
       renderedValue="Thématiques"
-      shouldShowLabels={false}
+      shouldShowLabels={shouldShowLabels}
       style={style}
       value={value}
       valueKey="id"

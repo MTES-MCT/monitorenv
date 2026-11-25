@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.PropagatedFieldEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryAreaGroup
@@ -9,11 +10,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulator
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaGroupPropagationConflicts
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.PropagationConflictsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaGroupDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.LayerNamesDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.PropagationConflictDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreaGroupDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreaToCompleteDataOuput
@@ -45,6 +49,7 @@ class RegulatoryAreas(
     private val getRegulatoryAreaByIds: GetRegulatoryAreaByIds,
     private val getAllRegulatoryAreasTiles: GetAllRegulatoryAreasTiles,
     private val getRegulatoryAreasGroupById: GetRegulatoryAreasGroupById,
+    private val getRegulatoryAreaGroupPropagationConflicts: GetRegulatoryAreaGroupPropagationConflicts,
 ) {
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
@@ -171,7 +176,10 @@ class RegulatoryAreas(
         @RequestBody regulatoryAreaDataInput: RegulatoryAreaDataInput,
     ): RegulatoryAreaDataOutput =
         RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
-            createOrUpdateRegulatoryArea.execute(regulatoryAreaDataInput.toRegulatoryAreaEntity()),
+            createOrUpdateRegulatoryArea.execute(
+                regulatoryArea = regulatoryAreaDataInput.toRegulatoryAreaEntity(),
+                inheritedFields = regulatoryAreaDataInput.inheritedFields,
+            ),
         )
 
     @GetMapping("/layer-names")
@@ -209,4 +217,16 @@ class RegulatoryAreas(
                 regulatoryAreaGroup = group.toRegulatoryAreaGroup(),
             ),
         )
+
+    @PostMapping("/groups/propagation-conflicts")
+    @Operation(
+        summary = "For each field, list the regulatory areas whose current value would be overwritten by the group value",
+    )
+    fun getPropagationConflicts(
+        @RequestBody
+        body: PropagationConflictsDataInput,
+    ): Map<PropagatedFieldEnum, PropagationConflictDataOutput> =
+        getRegulatoryAreaGroupPropagationConflicts
+            .execute(regulatoryAreaIds = body.regulatoryAreaIds, fields = body.fields)
+            .mapValues { (_, conflict) -> PropagationConflictDataOutput.fromPropagationConflictDTO(conflict) }
 }

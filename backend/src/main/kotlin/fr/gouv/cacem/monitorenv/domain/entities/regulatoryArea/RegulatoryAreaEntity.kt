@@ -18,6 +18,8 @@ data class RegulatoryAreaEntity(
     val editionCacem: ZonedDateTime? = null,
     val extent: DoubleArray? = null,
     val facade: String? = null,
+    /** Only for zones: fields whose value comes from the group (see [PropagatedFieldEnum]) */
+    val inheritedFields: List<PropagatedFieldEnum> = listOf(),
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
     val location: String?,
@@ -25,6 +27,8 @@ data class RegulatoryAreaEntity(
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
+    /** Only for groups: fields applied by default to the regulatory areas of the group */
+    val propagatedFields: List<PropagatedFieldEnum> = listOf(),
     val refReg: String? = null,
     val resume: String? = null,
     val source: String? = null,
@@ -69,6 +73,7 @@ data class RegulatoryAreaEntity(
         if (editionCacem != other.editionCacem) return false
         if (!extent.contentEquals(other.extent)) return false
         if (facade != other.facade) return false
+        if (inheritedFields != other.inheritedFields) return false
         if (geom != other.geom) return false
         if (layerName != other.layerName) return false
         if (location != other.location) return false
@@ -76,6 +81,7 @@ data class RegulatoryAreaEntity(
         if (plan != other.plan) return false
         if (polyName != other.polyName) return false
         if (prohibitionPeriods != other.prohibitionPeriods) return false
+        if (propagatedFields != other.propagatedFields) return false
         if (refReg != other.refReg) return false
         if (resume != other.resume) return false
         if (source != other.source) return false
@@ -100,6 +106,7 @@ data class RegulatoryAreaEntity(
         result = 31 * result + (editionCacem?.hashCode() ?: 0)
         result = 31 * result + (extent?.contentHashCode() ?: 0)
         result = 31 * result + (facade?.hashCode() ?: 0)
+        result = 31 * result + inheritedFields.hashCode()
         result = 31 * result + (geom?.hashCode() ?: 0)
         result = 31 * result + (layerName?.hashCode() ?: 0)
         result = 31 * result + (location?.hashCode() ?: 0)
@@ -107,6 +114,7 @@ data class RegulatoryAreaEntity(
         result = 31 * result + (plan?.hashCode() ?: 0)
         result = 31 * result + (polyName?.hashCode() ?: 0)
         result = 31 * result + (prohibitionPeriods?.hashCode() ?: 0)
+        result = 31 * result + propagatedFields.hashCode()
         result = 31 * result + (refReg?.hashCode() ?: 0)
         result = 31 * result + (resume?.hashCode() ?: 0)
         result = 31 * result + (source?.hashCode() ?: 0)

@@ -11,13 +11,17 @@ import { MapLayer } from '@features/map/layers/MapLayer'
 import { MapExtentController } from '@features/map/MapExtentController'
 import { ZoomListener } from '@features/map/ZoomListener'
 import { BackofficeRegulatoryAreaGroupLayer } from '@features/RegulatoryArea/components/Layers/BackofficeRegulatoryAreaGroupLayer'
-import { SubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
 import { DuplicateWarningMessage } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/DuplicateWarningMessage'
 import { RegulatoryAreaGroupFormSchema } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/Schema'
 import { RegulatoryAreaItem } from '@features/RegulatoryArea/components/RegulatoryAreaList/RegulatoryAreaItem'
 import { regulatoryAreaTableActions } from '@features/RegulatoryArea/components/RegulatoryAreaList/slice'
 import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/RegulatoryAreaPanel'
-import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@features/RegulatoryArea/style'
+import {
+  PROPAGATED_FIELD_TO_FORM_KEY,
+  type RegulatoryAreaGroupFields,
+  usePropagation
+} from '@features/RegulatoryArea/hooks/usePropagation'
+import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -29,6 +33,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 
+import { GroupIdentification } from './GroupIdentification'
 import { RegulatoryTexts } from './RegulatoryTexts'
 import { getTitle } from '../../../../domain/entities/layers/utils'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
@@ -51,13 +56,29 @@ export function RegulatoryAreaGroupForm() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useAppDispatch()
-  const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const { groupId } = useParams()
+
+  const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
+
   const isNew = groupId === 'new'
   const { data: regulatoryAreaGroup } = useGetRegulatoryAreaGroupByIdQuery(
     groupId && !Number.isNaN(+groupId) ? +groupId : skipToken
   )
   const { data: layerNames } = useGetLayerNamesQuery()
+
+  const regulatoryAreas = useMemo(
+    () => regulatoryAreaGroup?.regulatoryAreas ?? [],
+    [regulatoryAreaGroup?.regulatoryAreas]
+  )
+  const {
+    conflicts,
+    isDirty: isPropagationDirty,
+    isValid: isPropagationValid,
+    needsAnswer,
+    propagation,
+    setOverwrite,
+    toggle
+  } = usePropagation(regulatoryAreas, regulatoryAreaGroup?.group.propagatedFields)
 
   const layerNameOptions = useMemo(() => {
     const formattedLayerNames = (layerNames ?? [])
@@ -77,16 +98,27 @@ export function RegulatoryAreaGroupForm() {
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
+  const [dismissedGroupValueOnlyMessages, setDismissedGroupValueOnlyMessages] = useState<RegulatoryAreaGroupFields[]>(
+    []
+  )
+  const dismissGroupValueOnlyMessage = (field: RegulatoryAreaGroupFields) =>
+    setDismissedGroupValueOnlyMessages(previous => (previous.includes(field) ? previous : [...previous, field]))
 
   const initialValues: RegulatoryArea.RegulatoryAreaGroupToApi = {
     additionalRefReg: regulatoryAreaGroup?.group.additionalRefReg,
+    authorizationPeriods: regulatoryAreaGroup?.group.authorizationPeriods,
     date: regulatoryAreaGroup?.group.date,
     dateFin: regulatoryAreaGroup?.group.dateFin,
     id: regulatoryAreaGroup?.group.id,
     layerName: regulatoryAreaGroup?.group.layerName,
     location: regulatoryAreaGroup?.group.location,
+    prohibitionPeriods: regulatoryAreaGroup?.group.prohibitionPeriods,
+    propagatedFields: regulatoryAreaGroup?.group.propagatedFields,
     refReg: regulatoryAreaGroup?.group.refReg,
-    regulatoryAreaIds: regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? [],
+    regulatoryAreaIds: regulatoryAreas.map(({ id }) => id),
+    resume: regulatoryAreaGroup?.group.resume,
+    tags: regulatoryAreaGroup?.group.tags,
+    themes: regulatoryAreaGroup?.group.themes,
     type: regulatoryAreaGroup?.group.type,
     url: regulatoryAreaGroup?.group.url
   }
@@ -98,7 +130,7 @@ export function RegulatoryAreaGroupForm() {
   const [navigateCallback, setNavigateCallback] = useState(() => backToList)
 
   const saveRegulatoryAreaGroup = async (group: RegulatoryArea.RegulatoryAreaGroupToApi) => {
-    const savedRegulatoryAreaGroup = await dispatch(createOrUpdateRegulatoryAreaGroup(group))
+    const savedRegulatoryAreaGroup = await dispatch(createOrUpdateRegulatoryAreaGroup({ ...group, propagation }))
     if (savedRegulatoryAreaGroup?.group.id && !location.pathname.includes(`${savedRegulatoryAreaGroup.group.id}`)) {
       navigate(
         `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/${savedRegulatoryAreaGroup.group.id}`,
@@ -154,6 +186,14 @@ export function RegulatoryAreaGroupForm() {
     dispatch(setFitToExtent(extent))
   }, [dispatch, regulatoryAreaGroup?.regulatoryAreas])
 
+  const withIdentification = useMemo(
+    () =>
+      Object.values(propagation)
+        .map(p => p?.enabled)
+        .some(Boolean),
+    [propagation]
+  )
+
   return (
     <StyledBackofficeWrapper>
       <Formik
@@ -163,7 +203,7 @@ export function RegulatoryAreaGroupForm() {
         validateOnChange={false}
         validationSchema={RegulatoryAreaGroupFormSchema}
       >
-        {({ dirty, handleSubmit, values }) => (
+        {({ dirty, handleSubmit, setFieldValue, values }) => (
           <RegulatoryWrapper>
             <header>
               <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
@@ -239,8 +279,33 @@ export function RegulatoryAreaGroupForm() {
                       onChange={() => {}}
                       readOnly
                     />
+                    {RegulatoryArea.DATA_FROM_GROUP.map(item => (
+                      <Checkbox
+                        key={item.value}
+                        checked={propagation[item.value]?.enabled}
+                        label={item.label}
+                        name={item.value}
+                        onChange={isChecked => {
+                          toggle(item.value, !!isChecked)
+                          if (!isChecked) {
+                            setFieldValue(PROPAGATED_FIELD_TO_FORM_KEY[item.value], undefined)
+                          }
+                        }}
+                      />
+                    ))}
                   </CommonPropertiesWrapper>
                 </section>
+                {withIdentification && (
+                  <GroupIdentification
+                    conflicts={conflicts}
+                    dismissedGroupValueOnlyMessages={dismissedGroupValueOnlyMessages}
+                    dismissGroupValueOnlyMessage={dismissGroupValueOnlyMessage}
+                    isNew={isNew}
+                    needsAnswer={needsAnswer}
+                    propagation={propagation}
+                    setOverwrite={setOverwrite}
+                  />
+                )}
 
                 <RegulatoryTexts isNew={isNew} />
               </FormContent>
@@ -249,7 +314,7 @@ export function RegulatoryAreaGroupForm() {
                 <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
                   Fermer
                 </Button>
-                <Button disabled={!dirty} type="submit">
+                <Button disabled={!(dirty || isPropagationDirty) || !isPropagationValid} type="submit">
                   {isNew ? 'Créer le groupe' : 'Enregistrer les modifications'}
                 </Button>
               </Footer>

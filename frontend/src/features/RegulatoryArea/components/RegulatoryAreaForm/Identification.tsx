@@ -6,6 +6,7 @@ import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { ResetButton } from '@features/commonComponents/ResetButton'
+import { SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import {
   Checkbox,
@@ -14,21 +15,19 @@ import {
   FormikTextInput,
   Icon,
   Label,
+  LinkButton,
   Select,
-  SingleTag,
   THEME
 } from '@mtes-mct/monitor-ui'
-import { deleteTagTag } from '@utils/deleteTagTag'
-import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useFormikContext } from 'formik'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import { SubTitle } from './style'
+import { FieldsListFromGroup } from './FieldsListFromGroup'
 import { formatLayerName } from '../../utils'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -127,14 +126,28 @@ export function Identification({
     const groupFound = layerNames?.find(groupWithTotal => groupWithTotal.group.id === nextValue)?.group
     setFieldValue('layerName', groupFound?.layerName)
     setFieldValue('location', groupFound?.location)
+    setFieldValue('inheritedFields', groupFound?.propagatedFields)
+
+    const propagatedFields = groupFound?.propagatedFields ?? []
+    const shouldInherit = (field: (typeof propagatedFields)[number]) => !isEditing && propagatedFields.includes(field)
+
+    if (shouldInherit('AUTHORIZATION_PERIODS')) {
+      setFieldValue('authorizationPeriods', groupFound?.authorizationPeriods)
+    }
+    if (shouldInherit('PROHIBITION_PERIODS')) {
+      setFieldValue('prohibitionPeriods', groupFound?.prohibitionPeriods)
+    }
+    if (shouldInherit('RESUME')) {
+      setFieldValue('resume', groupFound?.resume)
+    }
+    if (shouldInherit('TAGS')) {
+      setFieldValue('tags', groupFound?.tags)
+    }
+    if (shouldInherit('THEMES')) {
+      setFieldValue('themes', groupFound?.themes)
+    }
     setIsModifyingLayerName(false)
   }
-
-  const allThemesAndSubthemes = useMemo(
-    () => values?.themes?.flatMap(theme => [...theme.subThemes, theme]),
-    [values?.themes]
-  )
-  const allTagsAndSubtags = useMemo(() => values?.tags?.flatMap(tag => [...tag.subTags, tag]), [values?.tags])
 
   return (
     <>
@@ -151,6 +164,9 @@ export function Identification({
         />
       )}
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
+      {values.inheritedFields && values.inheritedFields?.length > 0 && (
+        <FieldsListFromGroup inheritedFields={values.inheritedFields} />
+      )}
       <FieldsWrapper>
         <FieldWithTooltip>
           {values.layerName && !isModifyingLayerName ? (
@@ -161,7 +177,9 @@ export function Identification({
               </div>
               <InlineButtons>
                 <ResetButton label="Changer la zone de groupe" onClick={changeGroup} />
-                <ResetButton label="Modifier info. du groupe" onClick={modifyGroup} />
+                <LinkButton Icon={Icon.EditUnbordered} onClick={modifyGroup}>
+                  Modifier info. du groupe
+                </LinkButton>
               </InlineButtons>
             </>
           ) : (
@@ -205,7 +223,9 @@ export function Identification({
         </FieldWithTooltip>
         <InlineFields>
           <Fields>
-            <RegulatoryThemesFilter
+            <StyledRegulatoryThemesFilter
+              $isReadOnly={values.inheritedFields?.includes('THEMES')}
+              className="readOnlyThemes"
               error={errors.themes}
               isErrorMessageHidden
               isLabelHidden={false}
@@ -213,49 +233,36 @@ export function Identification({
               isTransparent={false}
               label="Thématiques et sous-thématiques"
               onChange={setThemes}
+              readOnly={values.inheritedFields?.includes('THEMES')}
+              shouldShowLabels
               value={values?.themes ?? []}
             />
-            <SmallInlineFields>
-              {allThemesAndSubthemes?.map(theme => (
-                <SingleTag
-                  key={theme.id}
-                  onDelete={() => {
-                    const updatedTags = deleteThemeTag(values?.themes ?? [], theme)
-                    setFieldValue('themes', updatedTags)
-                  }}
-                >
-                  {theme.name}
-                </SingleTag>
-              ))}
-            </SmallInlineFields>
           </Fields>
           <Fields>
-            <RegulatoryTagsFilter
+            <StyledRegulatoryTagsFilter
+              $isReadOnly={values.inheritedFields?.includes('TAGS')}
+              className="readOnlyTags"
               error={errors.tags}
               isErrorMessageHidden
               isLabelHidden={false}
               isTransparent={false}
               label="Tags et sous-tags"
               onChange={setTags}
+              readOnly={values.inheritedFields?.includes('TAGS')}
+              shouldShowLabels
               value={values?.tags ?? []}
             />
-            <SmallInlineFields>
-              {allTagsAndSubtags?.map(tag => (
-                <SingleTag
-                  key={tag.id}
-                  onDelete={() => {
-                    const updatedTags = deleteTagTag(values?.tags ?? [], tag)
-                    setFieldValue('tags', updatedTags)
-                  }}
-                >
-                  {tag.name}
-                </SingleTag>
-              ))}
-            </SmallInlineFields>
           </Fields>
         </InlineFields>
         <div>
-          <FormikTextarea isErrorMessageHidden label="Résumé" name="resume" rows={4} />
+          <StyledFormikTextarea
+            $isReadOnly={values.inheritedFields?.includes('RESUME')}
+            isErrorMessageHidden
+            label="Résumé"
+            name="resume"
+            readOnly={values.inheritedFields?.includes('RESUME')}
+            rows={4}
+          />
           <InformationMessage>
             Le résumé concerne tout ce qui n’est pas une période. Si la réglementation ne concerne que des périodes,
             alors le résumé n’est pas nécessaire.
@@ -267,13 +274,15 @@ export function Identification({
               <StyledIcon color={THEME.color.mediumSeaGreen} size={10} />
               Période d&apos;autorisation
             </Label>
-            <FormikTextarea
+            <StyledFormikTextarea
+              $isReadOnly={values.inheritedFields?.includes('AUTHORIZATION_PERIODS')}
               isErrorMessageHidden
               isLabelHidden
               isRequired
               label="Période d'autorisation"
               name="authorizationPeriods"
               placeholder="Détail de la période d’autorisation"
+              readOnly={values.inheritedFields?.includes('AUTHORIZATION_PERIODS')}
             />
           </Period>
           <Period>
@@ -281,13 +290,15 @@ export function Identification({
               <StyledIcon color={THEME.color.maximumRed} size={10} />
               Période d&apos;interdiction
             </Label>
-            <FormikTextarea
+            <StyledFormikTextarea
+              $isReadOnly={values.inheritedFields?.includes('PROHIBITION_PERIODS')}
               isErrorMessageHidden
               isLabelHidden
               isRequired
               label="Période d'interdiction"
               name="prohibitionPeriods"
               placeholder="Détail de la période d’interdiction"
+              readOnly={values.inheritedFields?.includes('PROHIBITION_PERIODS')}
             />
           </Period>
         </PeriodContainer>
@@ -341,13 +352,6 @@ const InlineButtons = styled.div`
   gap: 16px;
 `
 
-const SmallInlineFields = styled(InlineFields)`
-  gap: 4px;
-  flex-wrap: wrap;
-  flex: 0;
-  justify-content: start;
-`
-
 const FieldWithTooltip = styled(InlineFields)`
   align-items: end;
 `
@@ -386,4 +390,40 @@ const Period = styled.div`
 
 const StyledIcon = styled(Icon.CircleFilled)`
   margin-right: 8px;
+`
+const StyledFormikTextarea = styled(FormikTextarea)<{ $isReadOnly?: boolean }>`
+  ${({ $isReadOnly }) =>
+    $isReadOnly &&
+    css`
+      > textarea {
+        background-color: ${p => p.theme.color.cultured};
+        border: none;
+        &:hover,
+        &:active,
+        &:focus {
+          background-color: ${p => p.theme.color.cultured};
+          border: none;
+        }
+      }
+    `}
+`
+
+const StyledRegulatoryTagsFilter = styled(RegulatoryTagsFilter)<{ $isReadOnly?: boolean }>`
+  ${({ $isReadOnly }) =>
+    $isReadOnly &&
+    css`
+      > div {
+        background-color: ${p => p.theme.color.cultured};
+      }
+    `}
+`
+
+const StyledRegulatoryThemesFilter = styled(RegulatoryThemesFilter)<{ $isReadOnly?: boolean }>`
+  ${({ $isReadOnly }) =>
+    $isReadOnly &&
+    css`
+      > div {
+        background-color: ${p => p.theme.color.cultured};
+      }
+    `}
 `

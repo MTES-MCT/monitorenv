@@ -4,29 +4,41 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaGroupEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaPk
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.geom.PrecisionModel
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import tools.jackson.databind.json.JsonMapper
+import java.time.Instant
 import java.time.ZonedDateTime
 
 @Repository
 class JpaRegulatoryAreaGroupRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository,
     private val dbRegulatoryAreaGroupRepository: IDBRegulatoryAreaGroupRepository,
+    private val dbTagRegulatoryAreaRepository: IDBTagRegulatoryAreaRepository,
+    private val dbThemeRegulatoryAreaRepository: IDBThemeRegulatoryAreaRepository,
     private val mapper: JsonMapper,
 ) : IRegulatoryAreaGroupRepository {
     override fun findAll(filters: SearchFilters): List<RegulatoryAreaGroupDTO> {
@@ -119,8 +131,28 @@ class JpaRegulatoryAreaGroupRepository(
         )
     }
 
+    override fun findGroupByRegulatoryAreaId(regulatoryAreaId: Int): RegulatoryAreaEntity? =
+        dbRegulatoryAreaGroupRepository
+            .findAllByRegulatoryAreaId(regulatoryAreaId)
+            .firstOrNull()
+            ?.group
+            ?.toRegulatoryArea(mapper)
+
+    override fun findGroupByLayerNameAndLocation(
+        layerName: String,
+        location: String?,
+    ): RegulatoryAreaEntity? =
+        dbRegulatoryAreaRepository
+            .findAllGroupByLayerNameAndLocation(layerName = layerName, location = location)
+            .singleOrNull()
+            ?.toRegulatoryArea(mapper)
+
+    @CacheEvict(value = ["regulatory_areas_tiles"], allEntries = true)
     @Transactional
-    override fun save(regulatoryAreaGroup: RegulatoryAreaGroupEntity): RegulatoryAreaGroupDTO {
+    override fun save(
+        regulatoryAreaGroup: RegulatoryAreaGroupEntity,
+        regulatoryAreasToUpdate: List<RegulatoryAreaEntity>,
+    ): RegulatoryAreaGroupDTO {
         var id = regulatoryAreaGroup.id
         if (id == null) {
             id = dbRegulatoryAreaRepository.findNextId()
@@ -143,17 +175,22 @@ class JpaRegulatoryAreaGroupRepository(
                 plan = null,
                 polyName = null,
                 refReg = regulatoryAreaGroup.refReg,
-                resume = null,
+                resume = regulatoryAreaGroup.resume,
                 source = null,
                 tags = emptyList(),
                 themes = emptyList(),
                 type = regulatoryAreaGroup.type,
                 url = regulatoryAreaGroup.url,
                 additionalRefReg = regulatoryAreaGroup.additionalRefReg.let { mapper.valueToTree(it) },
-                authorizationPeriods = null,
-                prohibitionPeriods = null,
+                authorizationPeriods = regulatoryAreaGroup.authorizationPeriods,
+                prohibitionPeriods = regulatoryAreaGroup.prohibitionPeriods,
+                propagatedFields = regulatoryAreaGroup.propagatedFields.sorted(),
             )
-        val savedGroup = dbRegulatoryAreaRepository.save(groupToSave)
+        val savedGroup = dbRegulatoryAreaRepository.saveAndFlush(groupToSave)
+        replaceThemes(savedGroup, regulatoryAreaGroup.themes)
+        replaceTags(savedGroup, regulatoryAreaGroup.tags)
+
+        updateRegulatoryAreas(regulatoryAreasToUpdate)
 
         dbRegulatoryAreaRepository.updateLayerNameAndLocationByIds(
             layerName = regulatoryAreaGroup.layerName,
@@ -176,19 +213,63 @@ class JpaRegulatoryAreaGroupRepository(
                         group = dbRegulatoryAreaRepository.getReferenceById(id),
                     )
                 }
-            val savedRegulatoryAreaGroup = dbRegulatoryAreaGroupRepository.saveAll(regulatoryAreaGroupModels)
-            val group = savedRegulatoryAreaGroup.first().group.toRegulatoryArea(mapper)
-            val areas =
-                savedRegulatoryAreaGroup.map {
-                    it.regulatoryArea.toRegulatoryArea(
-                        mapper,
-                        savedRegulatoryAreaGroup.first().group,
-                    )
-                }
-
-            return RegulatoryAreaGroupDTO(group = group, areas = areas)
+            dbRegulatoryAreaGroupRepository.saveAll(regulatoryAreaGroupModels)
         }
 
-        return RegulatoryAreaGroupDTO(group = savedGroup.toRegulatoryArea(mapper), areas = emptyList())
+        // Re-read the group so that the themes, tags and copied fields reflect what has been saved
+        dbRegulatoryAreaRepository.flush()
+        return requireNotNull(findGroupById(id)) { "Regulatory area group $id not found after save" }
+    }
+
+    private fun updateRegulatoryAreas(regulatoryAreas: List<RegulatoryAreaEntity>) {
+        if (regulatoryAreas.isEmpty()) {
+            return
+        }
+
+        val regulatoryAreaModels =
+            dbRegulatoryAreaRepository
+                .findAllById(
+                    regulatoryAreas.map { it.id },
+                ).associateBy { it.id }
+        regulatoryAreas.forEach { regulatoryArea ->
+            val regulatoryAreaModel = regulatoryAreaModels.getValue(regulatoryArea.id)
+            val savedRegulatoryArea =
+                dbRegulatoryAreaRepository.save(
+                    regulatoryAreaModel.copy(
+                        authorizationPeriods = regulatoryArea.authorizationPeriods,
+                        editionBo = Instant.now(),
+                        inheritedFields = regulatoryArea.inheritedFields,
+                        prohibitionPeriods = regulatoryArea.prohibitionPeriods,
+                        resume = regulatoryArea.resume,
+                    ),
+                )
+            replaceThemes(savedRegulatoryArea, regulatoryArea.themes)
+            replaceTags(savedRegulatoryArea, regulatoryArea.tags)
+        }
+        dbRegulatoryAreaRepository.flush()
+    }
+
+    private fun replaceThemes(
+        regulatoryArea: RegulatoryAreaModel,
+        themes: List<ThemeEntity>,
+    ) {
+        dbThemeRegulatoryAreaRepository.deleteAllByRegulatoryAreaId(regulatoryArea.id)
+        val themeModels =
+            ThemeRegulatoryAreaModel.fromThemesEntities(themes, regulatoryArea).onEach {
+                it.id = ThemeRegulatoryAreaPk(it.theme.id, regulatoryArea.id)
+            }
+        dbThemeRegulatoryAreaRepository.saveAll(themeModels)
+    }
+
+    private fun replaceTags(
+        regulatoryArea: RegulatoryAreaModel,
+        tags: List<TagEntity>,
+    ) {
+        dbTagRegulatoryAreaRepository.deleteAllByRegulatoryAreaId(regulatoryArea.id)
+        val tagModels =
+            TagRegulatoryAreaModel.fromTagEntities(tags, regulatoryArea).onEach {
+                it.id = TagRegulatoryAreaPk(it.tag.id, regulatoryArea.id)
+            }
+        dbTagRegulatoryAreaRepository.saveAll(tagModels)
     }
 }

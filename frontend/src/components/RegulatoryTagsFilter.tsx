@@ -6,6 +6,7 @@ import { type CSSProperties, useMemo } from 'react'
 import type { TagFromAPI, TagOption } from '../domain/entities/tags'
 
 export function RegulatoryTagsFilter({
+  className,
   error = undefined,
   isErrorMessageHidden = false,
   isLabelHidden = true,
@@ -14,9 +15,12 @@ export function RegulatoryTagsFilter({
   label,
   onChange,
   popupStyle,
+  readOnly = false,
+  shouldShowLabels = false,
   style,
   value
 }: {
+  className?: string
   error?: string
   isErrorMessageHidden?: boolean
   isLabelHidden?: boolean
@@ -25,6 +29,8 @@ export function RegulatoryTagsFilter({
   label?: string
   onChange: (nextTags: TagOption[] | TagFromAPI[] | undefined) => void
   popupStyle?: CSSProperties
+  readOnly?: boolean
+  shouldShowLabels?: boolean
   style?: CSSProperties
   value: TagOption[] | TagFromAPI[]
 }) {
@@ -36,6 +42,7 @@ export function RegulatoryTagsFilter({
     <CheckTreePicker
       key={`regulatory-tags-${tagsOptions.length}`}
       childrenKey="subTags"
+      className={className}
       error={error}
       isErrorMessageHidden={isErrorMessageHidden}
       isLabelHidden={isLabelHidden}
@@ -48,9 +55,10 @@ export function RegulatoryTagsFilter({
       options={tagsOptions}
       placeholder="Tags et sous-tags"
       popupStyle={popupStyle}
+      readOnly={readOnly}
       renderedChildrenValue="Sous-tags."
       renderedValue="Tags"
-      shouldShowLabels={false}
+      shouldShowLabels={shouldShowLabels}
       style={style}
       value={value}
       valueKey="id"
