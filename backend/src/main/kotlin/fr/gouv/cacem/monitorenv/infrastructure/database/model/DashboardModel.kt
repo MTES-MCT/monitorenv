@@ -122,8 +122,8 @@ data class DashboardModel(
                         object : TypeReference<List<LinkEntity>>() {},
                     )
                 },
-            tags = toTagEntities(tags).distinct(),
-            themes = toThemeEntities(themes).distinct(),
+            tags = toTagEntities(tags.distinct()),
+            themes = toThemeEntities(themes.distinct()),
         )
     }
 
