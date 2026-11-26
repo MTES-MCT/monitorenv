@@ -1,9 +1,13 @@
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
+import { CenteredNoResult } from '@components/Table/TableWithSelectableRows/style'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
+import { dashboardFiltersActions } from '@features/Dashboard/components/DashboardForm/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
@@ -23,6 +27,7 @@ interface DashboardsTableProps {
 }
 
 export function DashboardsTable({ dashboards, isFetching, isLoading }: DashboardsTableProps) {
+  const dispatch = useAppDispatch()
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { pathname } = useLocation()
@@ -34,6 +39,11 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
   const flattenRegulatoryAreas = useMemo(
     () => regulatoryAreas?.regulatoryAreasByLayer.flatMap(group => group.regulatoryAreas) ?? [],
     [regulatoryAreas]
+  )
+
+  const hasNoResult = useMemo(
+    () => !isFetching && !isLoading && dashboards.length === 0,
+    [dashboards.length, isFetching, isLoading]
   )
 
   const columns = useMemo(
@@ -72,6 +82,10 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
+  const resetFilter = () => {
+    dispatch(dashboardFiltersActions.resetListFilters())
+  }
+
   return (
     <SelectableRowsTable
       ref={tableContainerRef}
@@ -79,11 +93,25 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
       columnsLength={columns.length}
       rows={
         <>
-          {virtualRows?.map(virtualRow => {
-            const row = rows[virtualRow.index] as RowType<Dashboard.Dashboard>
+          {hasNoResult ? (
+            <tr>
+              <td colSpan={columns.length}>
+                <CenteredNoResult Icon={Icon.Bullseye} title="Aucun tableau de bord">
+                  <Button accent={Accent.SECONDARY} Icon={Icon.Load} onClick={resetFilter}>
+                    Réinitialiser les filtres
+                  </Button>
+                </CenteredNoResult>
+              </td>
+            </tr>
+          ) : (
+            <>
+              {virtualRows?.map(virtualRow => {
+                const row = rows[virtualRow.index] as RowType<Dashboard.Dashboard>
 
-            return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
-          })}
+                return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
+              })}
+            </>
+          )}
         </>
       }
       rowVirtualizer={rowVirtualizer}

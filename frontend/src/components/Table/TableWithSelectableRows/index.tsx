@@ -37,11 +37,11 @@ export function SelectableRowsTableWithRef(
               />
             ))}
           </TableWithSelectableRows.Head>
-          <tbody>
+          <Tbody>
             {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
             {rows}
             {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
-          </tbody>
+          </Tbody>
         </StyledTable>
       </StyledTableContainer>
     </StyledTableWrapper>
@@ -64,4 +64,9 @@ const StyledTableContainer = styled.div`
 
 const StyledTable = styled(TableWithSelectableRows.Table)`
   width: 100%;
+`
+
+const Tbody = styled.tbody`
+  position: relative;
+  height: 100%;
 `

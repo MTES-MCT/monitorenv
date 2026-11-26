@@ -14,7 +14,7 @@ export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds,
   return (
     <StyledGroupActionContainer>
       <StyledTotalResults data-cy="totalReportings">
-        {totalReportings} {pluralize('Signalement', totalReportings)}
+        {totalReportings > 0 ? totalReportings : 'Aucun'} {pluralize('signalement', totalReportings)}
       </StyledTotalResults>
       <IconButton
         accent={Accent.SECONDARY}

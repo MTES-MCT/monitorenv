@@ -26,7 +26,7 @@ export function VigilancesAreasList() {
       ) : (
         <>
           <TotalResults>
-            {`${vigilanceAreasResults.length ?? 0} ${pluralize(
+            {`${vigilanceAreasResults.length > 0 ? vigilanceAreasResults.length : 'Aucune'} ${pluralize(
               'zone',
               vigilanceAreasResults.length ?? 0
             )} de vigilance`}

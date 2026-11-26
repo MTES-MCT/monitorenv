@@ -26,8 +26,8 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "24.63.0",
     "@gouvfr/dsfr": "1.15.4",
+    "@mtes-mct/monitor-ui": "24.64.0",
     "@react-pdf/renderer": "4.5.1",
     "@reduxjs/toolkit": "2.12.0",
     "@sentry/browser": "10.64.0",
