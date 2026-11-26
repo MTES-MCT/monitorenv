@@ -1,15 +1,19 @@
 import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
+import { CenteredNoResult } from '@components/Table/TableWithSelectableRows/style'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { Row } from '@features/Mission/components/MissionsList/Row'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { Columns } from './Columns'
+import { resetMissionFilters } from '../../../../domain/shared_slices/MissionFilters'
 
 import type { Row as RowType } from '@tanstack/table-core/build/lib/types'
 import type { Mission } from 'domain/entities/missions'
@@ -21,12 +25,18 @@ type MissionsTableProps = {
 }
 
 export function MissionsTable({ isFetching, isLoading, missions }: MissionsTableProps) {
+  const dispatch = useAppDispatch()
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { pathname } = useLocation()
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -25 : 0
 
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
+
+  const hasNoResult = useMemo(
+    () => !isFetching && !isLoading && missions.length === 0,
+    [missions.length, isFetching, isLoading]
+  )
 
   const columns = useMemo(
     () =>
@@ -60,6 +70,10 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
+  const resetFilters = useCallback(() => {
+    dispatch(resetMissionFilters())
+  }, [dispatch])
+
   return (
     <SelectableRowsTable
       ref={tableContainerRef}
@@ -67,11 +81,25 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
       columnsLength={columns.length}
       rows={
         <>
-          {virtualRows?.map(virtualRow => {
-            const row = rows[virtualRow.index] as RowType<Mission>
+          {hasNoResult ? (
+            <tr>
+              <td colSpan={columns.length}>
+                <CenteredNoResult Icon={Icon.MissionAction} title="Aucune mission">
+                  <Button accent={Accent.SECONDARY} Icon={Icon.Load} onClick={resetFilters}>
+                    Réinitialiser les filtres
+                  </Button>
+                </CenteredNoResult>
+              </td>
+            </tr>
+          ) : (
+            <>
+              {virtualRows?.map(virtualRow => {
+                const row = rows[virtualRow.index] as RowType<Mission>
 
-            return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
-          })}
+                return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
+              })}
+            </>
+          )}
         </>
       }
       rowVirtualizer={rowVirtualizer}

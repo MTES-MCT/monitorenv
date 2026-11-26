@@ -3,17 +3,7 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { TagsContainer } from '@components/style'
 import { ShowFilters } from '@components/Table/style'
-import {
-  setAreRecentsAreasChecked,
-  setFilteredRegulatoryTags,
-  setFilteredRegulatoryThemes,
-  setGlobalSearchText,
-  setIsAmpSearchResultsVisible,
-  setIsRegulatorySearchResultsVisible,
-  setIsVigilanceAreaSearchResultsVisible,
-  setSearchExtent,
-  setShouldFilterSearchOnMapExtent
-} from '@features/layersSelector/search/slice'
+import { setFilteredRegulatoryTags, setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
 import { VigilanceAreaTypeFilter } from '@features/VigilanceArea/components/VigilanceAreaTypeFilter'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -26,6 +16,7 @@ import { SearchFilter } from './SearchFilter'
 import { vigilanceAreaFiltersActions } from './slice'
 import { useGetSeaFrontsQuery } from '../../../../../api/seaFrontsAPI'
 import { ResetButton } from '../../../../commonComponents/ResetButton'
+import { resetVigilanceAreaListFilters } from '../../../useCases/filters/resetVigilanceAreaListFilters'
 import { PeriodFilter } from '../../PeriodFilter'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -72,19 +63,7 @@ export function VigilanceAreasFilters() {
   }
 
   const resetFilters = () => {
-    dispatch(vigilanceAreaFiltersActions.resetFilters())
-    dispatch(setFilteredRegulatoryTags([]))
-    dispatch(setFilteredRegulatoryThemes([]))
-    dispatch(setIsVigilanceAreaSearchResultsVisible(false))
-    dispatch(setGlobalSearchText(''))
-    dispatch(setAreRecentsAreasChecked(false))
-
-    if (searchExtent) {
-      dispatch(setSearchExtent(undefined))
-      dispatch(setIsAmpSearchResultsVisible(false))
-      dispatch(setIsRegulatorySearchResultsVisible(false))
-      dispatch(setShouldFilterSearchOnMapExtent(false))
-    }
+    dispatch(resetVigilanceAreaListFilters())
   }
 
   const updateVisibilityFilter = (visibility: 'PUBLIC' | 'PRIVATE' | undefined) => {

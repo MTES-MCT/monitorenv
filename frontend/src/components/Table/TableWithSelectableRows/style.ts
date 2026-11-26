@@ -1,4 +1,4 @@
-import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
+import { NoResult, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const ExpandableRowCell = styled(TableWithSelectableRows.Td)<{
@@ -68,4 +68,11 @@ export const ExpandedRowInlineItem = styled.li`
 export const ExpandedRowValueDetail = styled.span`
   color: ${p => p.theme.color.slateGray};
   white-space: break-spaces;
+`
+
+export const CenteredNoResult = styled(NoResult)`
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, 30%);
 `

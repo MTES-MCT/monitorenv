@@ -32,7 +32,8 @@ export function DashboardsList() {
       </StyledHeader>
       <Filters key="dashboard-filters-list" />
       <StyledTotalResults>
-        {dashboards?.length ?? '0'} Tableau{dashboards && dashboards.length > 1 ? 'x' : ''}
+        {(dashboards ?? []).length > 0 ? dashboards?.length : 'Aucun'} tableau
+        {dashboards && dashboards.length > 1 ? 'x' : ''} de bord
       </StyledTotalResults>
 
       {isError ? (

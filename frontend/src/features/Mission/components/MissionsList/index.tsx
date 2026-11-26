@@ -28,7 +28,7 @@ export function Missions() {
       </Header>
       <MissionFilters context={MissionFilterContext.TABLE} />
       <StyledTotalResults data-cy="Missions-numberOfDisplayedMissions">
-        {missions?.length ?? '0'} Mission{missions && missions.length > 1 ? 's' : ''}
+        {missions.length > 0 ? missions.length : 'Aucune'} mission{missions && missions.length > 1 ? 's' : ''}
       </StyledTotalResults>
 
       {isError ? (

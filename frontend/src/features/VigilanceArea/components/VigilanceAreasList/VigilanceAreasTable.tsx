@@ -1,7 +1,11 @@
 import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
+import { CenteredNoResult } from '@components/Table/TableWithSelectableRows/style'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
+import { resetVigilanceAreaListFilters } from '@features/VigilanceArea/useCases/filters/resetVigilanceAreaListFilters'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { type Row as RowType, type SortingState } from '@tanstack/react-table'
 import { hasMoreThanThirtyDays } from '@utils/hasMoreThanThirtyDays'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
@@ -23,11 +27,17 @@ export function VigilanceAreasTable({
   isLoading: boolean
   vigilanceAreas: VigilanceArea.VigilanceArea[]
 }) {
+  const dispatch = useAppDispatch()
   const { pathname } = useLocation()
 
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
 
   const [sorting, setSorting] = useState<SortingState>([])
+
+  const hasNoResult = useMemo(
+    () => !isFetching && !isLoading && vigilanceAreas.length === 0,
+    [vigilanceAreas.length, isFetching, isLoading]
+  )
 
   const columns = useMemo(
     () =>
@@ -65,6 +75,10 @@ export function VigilanceAreasTable({
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
+  const resetFilters = () => {
+    dispatch(resetVigilanceAreaListFilters())
+  }
+
   return (
     <SelectableRowsTable
       ref={tableContainerRef}
@@ -72,11 +86,25 @@ export function VigilanceAreasTable({
       columnsLength={columns.length}
       rows={
         <>
-          {virtualRows?.map(virtualRow => {
-            const row = rows[virtualRow.index] as RowType<VigilanceArea.VigilanceArea>
+          {hasNoResult ? (
+            <tr>
+              <td colSpan={columns.length}>
+                <CenteredNoResult Icon={Icon.VigilanceAreas} title="Aucune zone de vigilance">
+                  <Button accent={Accent.SECONDARY} Icon={Icon.Load} onClick={resetFilters}>
+                    Réinitialiser les filtres
+                  </Button>
+                </CenteredNoResult>
+              </td>
+            </tr>
+          ) : (
+            <>
+              {virtualRows?.map(virtualRow => {
+                const row = rows[virtualRow.index] as RowType<VigilanceArea.VigilanceArea>
 
-            return <Row key={virtualRow.key} row={row} table={table} />
-          })}
+                return <Row key={virtualRow.key} row={row} table={table} />
+              })}
+            </>
+          )}
         </>
       }
       rowVirtualizer={rowVirtualizer}

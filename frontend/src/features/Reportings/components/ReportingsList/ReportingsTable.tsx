@@ -1,11 +1,15 @@
 import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
+import { CenteredNoResult } from '@components/Table/TableWithSelectableRows/style'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
+import { reportingsFiltersActions } from '@features/Reportings/Filters/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { type RowSelectionState, type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import styled from 'styled-components'
 
@@ -25,12 +29,18 @@ export function ReportingsTable({
   isLoading: boolean
   reportings: Reporting[] | undefined
 }) {
+  const dispatch = useAppDispatch()
   const { pathname } = useLocation()
 
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
+
+  const hasNoResult = useMemo(
+    () => !isFetching && !isLoading && (reportings ?? []).length === 0,
+    [reportings, isFetching, isLoading]
+  )
 
   const columns = useMemo(
     () =>
@@ -71,6 +81,10 @@ export function ReportingsTable({
     table.resetRowSelection(true)
   }
 
+  const resetFilters = useCallback(() => {
+    dispatch(reportingsFiltersActions.resetReportingsFilters())
+  }, [dispatch])
+
   return (
     <>
       <GroupActions
@@ -84,11 +98,25 @@ export function ReportingsTable({
         columnsLength={columns.length}
         rows={
           <>
-            {virtualRows?.map(virtualRow => {
-              const row = rows[virtualRow.index] as RowType<Reporting>
+            {hasNoResult ? (
+              <tr>
+                <td colSpan={columns.length}>
+                  <CenteredNoResult Icon={Icon.Report} title="Aucun signalement">
+                    <Button accent={Accent.SECONDARY} Icon={Icon.Load} onClick={resetFilters}>
+                      Réinitialiser les filtres
+                    </Button>
+                  </CenteredNoResult>
+                </td>
+              </tr>
+            ) : (
+              <>
+                {virtualRows?.map(virtualRow => {
+                  const row = rows[virtualRow.index] as RowType<Reporting>
 
-              return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
-            })}
+                  return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
+                })}
+              </>
+            )}
           </>
         }
         rowVirtualizer={rowVirtualizer}
