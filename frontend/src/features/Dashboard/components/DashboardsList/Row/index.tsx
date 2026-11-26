@@ -83,6 +83,12 @@ export function Row({
                   <ExpandedRowValue>{dashboard.reportingIds.length}</ExpandedRowValue>
                 </li>
               )}
+              {dashboard.controlUnitIds.length > 0 && (
+                <li>
+                  <ExpandedRowLabel>Unités</ExpandedRowLabel>
+                  <ExpandedRowValue>{dashboard.controlUnitIds.length}</ExpandedRowValue>
+                </li>
+              )}
             </CustomExpandedRowList>
           </ExpandedRowCell>
         </ExpandedRow>
