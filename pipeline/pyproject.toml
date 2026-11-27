@@ -41,7 +41,7 @@ importlib-metadata = "^8.7.0"
 ## Type Checking and Data Validation
 mypy = "^1.20.2"
 ## Code formatting
-black = "^26.3.1"
+black = "^26.10.1"
 ## Code quality
 isort = "^7.0.0"
 pylint = "^4.0.5"
